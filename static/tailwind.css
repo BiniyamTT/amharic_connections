@@ -763,11 +763,12 @@ hr{
   color: white;
 }
 
-.solvedcard {
+.solvedcard{
   display: flex;
   align-items: center;
   justify-content: center;
   width: auto;
+  min-width: 40.5rem;
   height: 5rem;
   border: 1px solid rgba(0, 0, 0, 0.26);
   border-radius: 0.25rem;
@@ -832,6 +833,17 @@ hr{
     border: 1px solid rgba(0, 0, 0, 0.26);
     border-radius: 0.25rem;
     background-color: aquamarine;
+  }
+
+  .solvedcard{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: auto;
+    min-width: 40.5rem;
+    height: 5rem;
+    border: 1px solid rgba(0, 0, 0, 0.26);
+    border-radius: 0.25rem;
   }
 }
 

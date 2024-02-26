@@ -49,9 +49,12 @@
     <section id="field">
       <div class="bg-slate-200  grid justify-center mx-auto pb-4 px-12 md:px-14 lg:px-24 w-full">
         <div class="gameboard grid grid-cols-4 gap-4">
-          <!-- Content here 
+          <!-- Content here
+           
           <div class="solvedcard col-span-4" style="background-color: #f9df6d;"> 1</div>-->
-          
+          <div class="solvedCategory col-span-4 grid grid-cols-4 gap-4" id="solvedCategory" style="display: none;">
+            <!-- Solved card be dynamically added here -->
+          </div>
           {% for word in words %}
           <div class="gamecard" id="gameCard">{{ word.word }}</div>
           {% endfor %}

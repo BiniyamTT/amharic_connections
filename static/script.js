@@ -43,9 +43,54 @@ function submitWords() {
     });
 }
 
+// Function to update the mistakes counter
+function updateMistakesCounter(attempts_left) {
+    const mistakeCounter = document.getElementById('mistakeCounter');
+    mistakeCounter.innerHTML = ''; // Clear existing circles
+
+    // Add circles based on the attempts left
+    for (let i = 0; i < attempts_left; i++) {
+        const circleSpan = document.createElement('span');
+        circleSpan.classList.add('material-symbols-outlined', 'filled');
+        circleSpan.textContent = 'circle'; // You may need to update this to use an appropriate icon or symbol
+        mistakeCounter.appendChild(circleSpan);
+    }
+}
+
+function removeSelectedWordsFromBoard() {
+    // Get the selected words
+    let selectedWords = document.querySelectorAll('.gamecard.active');
+
+    // Remove the entire div element for each selected word
+    selectedWords.forEach(word => {
+        word.remove();
+    });
+}
+
+function insertSolvedCard(submittedWords) {
+    // Create a new div element for the solved card
+    let solvedCardDiv = document.createElement('div');
+    solvedCardDiv.classList.add('solvedcard', 'col-span-4');
+    solvedCardDiv.style.backgroundColor = '#f9df6d';
+
+    // Extract the words and join them with commas
+    let wordsText = submittedWords.map(word => word.word).join(', ');
+
+    // Set the text content of the solved card
+    solvedCardDiv.textContent = wordsText;
+
+    // Get the solved category element
+    let solvedCategory = document.getElementById('solvedCategory');
+    solvedCategory.style.display = 'grid';
+
+    // Append the solved card to the solved category
+    solvedCategory.appendChild(solvedCardDiv);
+}
+
+
 function handleCheckResponse(data) {
     // Extract result and value from the data
-    const { result, value, attempts_left } = data;
+    const { result, value, attempts_left, submitted_words } = data;
     console.log('Attempts Left:', attempts_left);
 
     // Do something based on the result received from the server
@@ -56,6 +101,10 @@ function handleCheckResponse(data) {
         console.log('Right');
         console.log('Value:', value);
         console.log('Attempts Left:', attempts_left);
+        // Remove the selected words from the game board
+        removeSelectedWordsFromBoard();
+        // Insert a new solved card with the submitted words
+        insertSolvedCard(submitted_words);
     } else if (result === 'one-off') {
         // Handle 'one-off' response
         console.log('One-off');
@@ -68,21 +117,6 @@ function handleCheckResponse(data) {
         console.log('Value:', value);
         console.log('Attempts Left:', attempts_left);
         updateMistakesCounter(attempts_left)
-    }
-}
-
-
-// Function to update the mistakes counter
-function updateMistakesCounter(attempts_left) {
-    const mistakeCounter = document.getElementById('mistakeCounter');
-    mistakeCounter.innerHTML = ''; // Clear existing circles
-
-    // Add circles based on the attempts left
-    for (let i = 0; i < attempts_left; i++) {
-        const circleSpan = document.createElement('span');
-        circleSpan.classList.add('material-symbols-outlined', 'filled');
-        circleSpan.textContent = 'circle'; // You may need to update this to use an appropriate icon or symbol
-        mistakeCounter.appendChild(circleSpan);
     }
 }
 
