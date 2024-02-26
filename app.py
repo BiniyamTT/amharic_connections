@@ -32,16 +32,18 @@ MAX_ATTEMPTS = 4
 attempts_left = MAX_ATTEMPTS
 
 
-# Randomize word order
+# Capitalize and Randomize word order
+word_list = [word['word'] for word in words]
+uppercase_words = [word.upper() for word in word_list]
 random.seed(42)
-random.shuffle(words)
+random.shuffle(uppercase_words)
 
 # Get and format today's date
 date = datetime.today().strftime('%B %d, %Y')
 
 @app.route("/")
 def index():
-    return render_template("index.html", words=words, date=date)
+    return render_template("index.html", words=uppercase_words, date=date)
 
 @app.route("/check", methods=['POST'])
 def check():   
@@ -51,13 +53,13 @@ def check():
     
     # Receive the set of four words submitted from the frontend
     submitted_words = request.json['submittedWords']
-    
     # Extract the values and categories of the submitted words
+    print(submitted_words)
     submitted_values = []
     category = []
     for submitted_word in submitted_words:
         for word in words:
-            if word['word'] == submitted_word['word']:
+            if word['word'] == submitted_word['word'].lower():
                 submitted_values.append(word['value'])
                 category.append(word['category'])
                 break
@@ -65,20 +67,21 @@ def check():
     # Check if all four words have identical values
     if len(set(submitted_values)) == 1:
         value = submitted_values[0]  # Get the common value
-        category = category[0]  # Get the common value
+        category = category[0].upper()  # Get the common value
         print(attempts_left)
-        return jsonify({'result': 'right', 'value': value, 'attempts_left': attempts_left, 'submitted_words': submitted_words})
+        
+        return jsonify({'result': 'right', 'value': value, 'attempts_left': attempts_left, 'submitted_words': submitted_words, 'category':category})
     
     # Check if only one word has a different value
     elif len(set(submitted_values)) == 2:
         # Decrease attempts left by one
         attempts_left -= 1
         print(attempts_left)
-        return jsonify({'result': 'one-off', 'value': None, 'attempts_left': attempts_left, 'submitted_words': None})
+        return jsonify({'result': 'one-off', 'value': None, 'attempts_left': attempts_left, 'submitted_words': None, 'category':None})
     
     # More than one word has different values
     else:
         # Decrease attempts left by one
         attempts_left -= 1
         print(attempts_left)
-        return jsonify({'result': 'wrong', 'value': None, 'attempts_left': attempts_left, 'submitted_words': None})
+        return jsonify({'result': 'wrong', 'value': None, 'attempts_left': attempts_left, 'submitted_words': None, 'category':None})

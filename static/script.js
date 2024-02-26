@@ -8,6 +8,68 @@ function shuffle(array) {
     return array;
 }
 
+// Function to update the mistakes counter
+function updateMistakesCounter(attempts_left) {
+    const mistakeCounter = document.getElementById('mistakeCounter');
+    mistakeCounter.innerHTML = ''; // Clear existing circles
+
+    // Add circles based on the attempts left
+    for (let i = 0; i < attempts_left; i++) {
+        const circleSpan = document.createElement('span');
+        circleSpan.classList.add('material-symbols-outlined', 'filled');
+        circleSpan.textContent = 'circle'; // You may need to update this to use an appropriate icon or symbol
+        mistakeCounter.appendChild(circleSpan);
+    }
+}
+
+function removeSelectedWordsFromBoard() {
+    // Get the selected words
+    let selectedWords = document.querySelectorAll('.gamecard.active');
+
+    // Remove the entire div element for each selected word
+    selectedWords.forEach(word => {
+        word.remove();
+    });
+}
+
+function insertSolvedCard(submittedWords, category, value) {
+    // Create a new div element for the solved card
+    let solvedCardDiv = document.createElement('div');
+    solvedCardDiv.classList.add('solvedcard', 'solvedcardText', 'col-span-4');
+    if(value === 0){
+        solvedCardDiv.style.backgroundColor = '#f9df6d';
+    } else if (value === 1){
+        solvedCardDiv.style.backgroundColor = '#a0c35a';
+    } else if (value === 2){
+        solvedCardDiv.style.backgroundColor = '#b0c4ef';
+    }else{
+        solvedCardDiv.style.backgroundColor = '#ba81c5';
+    }
+    
+
+    // Create div elements for category and words
+    let categoryDiv = document.createElement('div');
+    let wordsDiv = document.createElement('div');
+
+
+    // Set text content for category and words
+    categoryDiv.textContent = category;
+    wordsDiv.textContent = submittedWords.map(word => word.word).join(', ');
+
+    // Append category and words divs to solved card div
+    solvedCardDiv.appendChild(categoryDiv);
+    solvedCardDiv.appendChild(wordsDiv);
+
+    // Get the solved category element
+    let solvedCategory = document.getElementById('solvedCategory');
+    solvedCategory.style.display = 'grid';
+
+    // Append the solved card to the solved category
+    solvedCategory.appendChild(solvedCardDiv);
+}
+
+
+
 function submitWords() {
     // Get the selected words
     let selectedWords = document.querySelectorAll('.gamecard.active');
@@ -43,54 +105,9 @@ function submitWords() {
     });
 }
 
-// Function to update the mistakes counter
-function updateMistakesCounter(attempts_left) {
-    const mistakeCounter = document.getElementById('mistakeCounter');
-    mistakeCounter.innerHTML = ''; // Clear existing circles
-
-    // Add circles based on the attempts left
-    for (let i = 0; i < attempts_left; i++) {
-        const circleSpan = document.createElement('span');
-        circleSpan.classList.add('material-symbols-outlined', 'filled');
-        circleSpan.textContent = 'circle'; // You may need to update this to use an appropriate icon or symbol
-        mistakeCounter.appendChild(circleSpan);
-    }
-}
-
-function removeSelectedWordsFromBoard() {
-    // Get the selected words
-    let selectedWords = document.querySelectorAll('.gamecard.active');
-
-    // Remove the entire div element for each selected word
-    selectedWords.forEach(word => {
-        word.remove();
-    });
-}
-
-function insertSolvedCard(submittedWords) {
-    // Create a new div element for the solved card
-    let solvedCardDiv = document.createElement('div');
-    solvedCardDiv.classList.add('solvedcard', 'col-span-4');
-    solvedCardDiv.style.backgroundColor = '#f9df6d';
-
-    // Extract the words and join them with commas
-    let wordsText = submittedWords.map(word => word.word).join(', ');
-
-    // Set the text content of the solved card
-    solvedCardDiv.textContent = wordsText;
-
-    // Get the solved category element
-    let solvedCategory = document.getElementById('solvedCategory');
-    solvedCategory.style.display = 'grid';
-
-    // Append the solved card to the solved category
-    solvedCategory.appendChild(solvedCardDiv);
-}
-
-
 function handleCheckResponse(data) {
     // Extract result and value from the data
-    const { result, value, attempts_left, submitted_words } = data;
+    const { result, value, attempts_left, submitted_words, category } = data;
     console.log('Attempts Left:', attempts_left);
 
     // Do something based on the result received from the server
@@ -101,10 +118,11 @@ function handleCheckResponse(data) {
         console.log('Right');
         console.log('Value:', value);
         console.log('Attempts Left:', attempts_left);
+        console.log('Category:', category);
         // Remove the selected words from the game board
         removeSelectedWordsFromBoard();
         // Insert a new solved card with the submitted words
-        insertSolvedCard(submitted_words);
+        insertSolvedCard(submitted_words, category, value);
     } else if (result === 'one-off') {
         // Handle 'one-off' response
         console.log('One-off');

@@ -25,6 +25,7 @@ hr{
 }
 
 .gamecard{
+    font-weight: 500;
     display: flex;
     align-items: center;
     justify-content: center;
@@ -45,9 +46,17 @@ hr{
     width: auto;
     min-width: 40.5rem;
     height: 5rem;
-    border: 1px solid rgba(0, 0, 0, 0.26);
     border-radius: 0.25rem;
 }
+
+.solvedcardText{
+    font-weight: 500;
+    display: grid;
+    text-align: center;
+    align-content: center;
+}
+
+
 .gameControl{
     @apply rounded-full outline outline-offset-0 outline-1 px-10 py-3 text-base;
 }
@@ -80,9 +89,16 @@ hr{
         align-items: center;
         justify-content: center;
         width: auto;
-        min-width: 40.5rem;
+        min-width: 48dvw;
         height: 5rem;
         border: 1px solid rgba(0, 0, 0, 0.26);
         border-radius: 0.25rem;
     }
+    .solvedcardText{
+        font-weight: 500;
+        display: grid;
+        text-align: center;
+        align-content: center;
+    }
+    
 }
