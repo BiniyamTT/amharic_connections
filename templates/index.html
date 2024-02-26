@@ -1,0 +1,81 @@
+<!doctype html>
+<html lang="en">
+
+  <head>
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <link rel="stylesheet" href="{{ url_for('static', filename='tailwind.css') }}">
+
+    <!-- Google Font -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Libre+Franklin:ital,wght@0,100..900;1,100..900&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" rel="stylesheet" />
+    <title>AmhariConnections</title>
+  </head>
+
+  <body class="font-libre pb-12">
+
+    <header class="py-6">
+      <div class="container flex justify-between items-center mx-auto px-12 md:px-14 lg:px-24 w-full">
+        <div class="text-2xl font-bold"> Amharic Connections</div>
+        <div class="hidden lg:flex space-x-4 items-center">
+          <a href="#"><button class="rounded bg-black px-10 py-3 text-white text-xs font-bold">SUBSCRIBE</button></a>
+          <a href="#"><button class="rounded outline outline-offset-0 outline-1 px-10 py-3 text-xs font-bold hover:bg-black hover:text-white ">LOG IN</button></a>
+        </div>
+        <div class="lg:hidden">
+          <span class="material-symbols-outlined">menu</span>
+        </div>
+      </div>
+    </header>
+    <hr>
+
+    <section id="dateContainer"> 
+      <div class="container flex justify-between items-center mx-auto py-3 px-12 md:px-14 lg:px-24 w-full">
+        <div class="datecontainer">{{ date }}</div>
+        <div class="help"><button><span class="material-symbols-outlined">help</span></button></div>
+      </div>
+    </section>
+
+    <hr>
+
+    <section id="instruction"> 
+      <div class="bg-slate-200 flex justify-center items-center mx-auto py-4 px-12 md:px-14 lg:px-24 w-full">
+        <div class="datecontainer">Create four groups of four!</div>
+      </div>
+    </section>
+
+    <section id="field">
+      <div class="bg-slate-200  grid justify-center mx-auto pb-4 px-12 md:px-14 lg:px-24 w-full">
+        <div class="gameboard grid grid-cols-4 gap-4">
+          <!-- Content here 
+          <div class="solvedcard col-span-4" style="background-color: #f9df6d;"> 1</div>-->
+          
+          {% for word in words %}
+          <div class="gamecard" id="gameCard">{{ word.word }}</div>
+          {% endfor %}
+      
+        </div>
+      </div>
+    </section>
+        
+    <section id="mistakes"> 
+      <div class="bg-slate-200 flex justify-center items-center space-x-2 mx-auto py-2 px-12 md:px-14 lg:px-24 w-full">
+        <div class="datecontainer">Mistakes remaining:</div>
+        <div class="misscounter flex items-center space-x-" id="mistakeCounter">
+          <!-- Circles will be dynamically added here -->
+        </div>
+      </div>
+    </section>
+
+    <section id="gameControls">
+      <div class="bg-slate-200 flex justify-center items-center space-x-2 mx-auto py-4 px-12 md:px-14 lg:px-24 w-full">
+        <button class="gameControl" id="shuffle">Shuffle</button>
+        <button disabled class="gameControl" id="deselect">Deselect all</button>
+        <button disabled class="gameControl" id="submit" >Submit</button>
+      </section>
+
+  </body>
+  <script src = "{{ url_for ('static', filename='script.js' )}}"></script>
+</html>

@@ -1,0 +1,76 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+.material-symbols-outlined {
+  font-variation-settings:
+  'FILL' 0,
+  'wght' 400,
+  'GRAD' 0,
+  'opsz' 24
+}
+
+.material-symbols-outlined.filled{
+    color: rgb(90, 89, 78);
+    font-variation-settings:
+    'FILL' 1,
+    'wght' 100,
+    'GRAD' -25,
+    'opsz' 20
+  }
+
+hr{
+    border-color: rgba(133, 133, 133, 0.308);
+    border-top-width: 0.094rem;
+}
+
+.gamecard{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 9.375rem;
+    height: 5rem;
+    border: 1px solid rgba(0, 0, 0, 0.26);
+    border-radius: 0.25rem;
+}
+.gamecard.active{
+    background-color: #5a594e;
+    color: white;
+}
+
+.solvedcard {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: auto;
+    height: 5rem;
+    border: 1px solid rgba(0, 0, 0, 0.26);
+    border-radius: 0.25rem;
+}
+.gameControl{
+    @apply rounded-full outline outline-offset-0 outline-1 px-10 py-3 text-base;
+}
+
+.submitbtn{
+    @apply rounded-full bg-black text-white px-10 py-3 text-base;
+}
+
+.gameControl:disabled{
+    @apply disabled:outline-gray-700 cursor-not-allowed opacity-50 rounded-full outline outline-offset-0 outline-1 px-10 py-3 text-base pointer-events-none
+}
+
+@media (max-width: 768px) {  
+    .gamecard{
+        --cardwidth: 16dvw;
+
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        width: var(--cardwidth);
+        height: var(--cardwidth);
+        height: width;
+        border: 1px solid rgba(0, 0, 0, 0.26);
+        border-radius: 0.25rem;
+        background-color: aquamarine;
+    }  
+}

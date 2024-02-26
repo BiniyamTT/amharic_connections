@@ -1,0 +1,9 @@
+   // Shuffle button function when clicked
+    shuffleButton.addEventListener('click', function() {
+        let gameCardsArray = Array.from(gameCards);
+        let activeGameCards
+        shuffle(gameCardsArray);
+        //for (let i = 0; i < gameCardsArray.length; i++) {
+       //     gameCardsArray[i].parentNode.appendChild(gameCardsArray[i]);
+        //}
+    });
