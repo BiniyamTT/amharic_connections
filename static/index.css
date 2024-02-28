@@ -2,6 +2,17 @@
 @tailwind components;
 @tailwind utilities;
 
+.body{
+    background-color: #e2e8f0;
+}
+
+.abyssinica-sil-regular {
+    font-family: "Abyssinica SIL", serif;
+    font-weight: 400;
+    font-style: normal;
+  }
+  
+
 .material-symbols-outlined {
   font-variation-settings:
   'FILL' 0,
@@ -26,12 +37,13 @@ hr{
 
 .gamecard{
     font-weight: 500;
+    font-size: larger;
     display: flex;
     align-items: center;
     justify-content: center;
     width: 9.375rem;
     height: 5rem;
-    border: 1px solid rgba(0, 0, 0, 0.26);
+    background-color: rgba(203,213,225,0.4);
     border-radius: 0.25rem;
 }
 .gamecard.active{
@@ -40,6 +52,7 @@ hr{
 }
 
 .solvedcard{
+    font-size: larger;
     display: flex;
     align-items: center;
     justify-content: center;
@@ -54,6 +67,7 @@ hr{
     display: grid;
     text-align: center;
     align-content: center;
+    
 }
 
 
@@ -69,11 +83,32 @@ hr{
     @apply disabled:outline-gray-700 cursor-not-allowed opacity-50 rounded-full outline outline-offset-0 outline-1 px-10 py-3 text-base pointer-events-none
 }
 
+@keyframes zoomOut {
+    0% {
+      transform: scale(1);
+    }
+    100% {
+      transform: scale(0);
+      opacity: 0; /* Fade out the circle as it scales down */
+    }
+  }
+
+@keyframes bounce {
+0%, 100% {
+    transform: translateY(0);
+}
+50% {
+    transform: translateY(-10px); /* Adjust the bounce height as needed */
+}
+}
+  
+
 @media (max-width: 768px) {  
     .gamecard{
         --cardwidth: 16dvw;
-
+        font-size: small;
         display: flex;
+        flex-wrap: nowrap;
         align-items: center;
         justify-content: center;
         width: var(--cardwidth);
@@ -81,11 +116,11 @@ hr{
         height: width;
         border: 1px solid rgba(0, 0, 0, 0.26);
         border-radius: 0.25rem;
-        background-color: aquamarine;
     }  
 
     .solvedcard{
         display: flex;
+        text-wrap: nowrap; 
         align-items: center;
         justify-content: center;
         width: auto;
@@ -100,5 +135,19 @@ hr{
         text-align: center;
         align-content: center;
     }
+    .gameControl{
+        @apply rounded-full outline outline-offset-0 outline-1 px-7 py-3 text-sm;
+    }
     
+    .submitbtn{
+        @apply rounded-full bg-black text-white px-7 py-3 text-sm;
+    }
+    
+    .gameControl:disabled{
+        @apply disabled:outline-gray-700 cursor-not-allowed opacity-50 rounded-full outline outline-offset-0 outline-1 px-7 py-3 text-sm pointer-events-none
+    }
+    
+    .gameControl{
+        text-wrap: nowrap;
+    }
 }

@@ -7,3 +7,19 @@
        //     gameCardsArray[i].parentNode.appendChild(gameCardsArray[i]);
         //}
     });
+
+
+
+    // Function to update the mistakes counter
+function updateMistakesCounter(attempts_left) {
+    const mistakeCounter = document.getElementById('mistakeCounter');
+    mistakeCounter.innerHTML = ''; // Clear existing circles
+
+    // Add circles based on the attempts left
+    for (let i = 0; i < attempts_left; i++) {
+        const circleSpan = document.createElement('span');
+        circleSpan.classList.add('material-symbols-outlined', 'filled');
+        circleSpan.textContent = 'circle'; // You may need to update this to use an appropriate icon or symbol
+        mistakeCounter.appendChild(circleSpan);
+    }
+}

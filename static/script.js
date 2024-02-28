@@ -1,3 +1,25 @@
+function updateDeselectButton() {
+    let activeGameCardsCount = document.querySelectorAll('.gamecard.active').length;
+    let deselectButton = document.getElementById('deselect');
+    if (activeGameCardsCount > 0) {
+        deselectButton.removeAttribute('disabled');
+    } else {
+        deselectButton.setAttribute('disabled', 'disabled');
+    }
+}
+
+function updateSubmitButton() {
+    let activeGameCardsCount = document.querySelectorAll('.gamecard.active').length;
+    let submitButton = document.getElementById('submit');
+    if (activeGameCardsCount === 4) {
+        submitButton.removeAttribute('disabled');
+        submitButton.classList.add('submitbtn');
+    } else {
+        submitButton.setAttribute('disabled', 'disabled');
+        submitButton.classList.remove('submitbtn');
+    }
+}
+
 function shuffle(array) {
     console.log('inside shuffle function');
     console.log(array);
@@ -8,19 +30,42 @@ function shuffle(array) {
     return array;
 }
 
+function deselectAll() {
+    let deselectButton = document.getElementById('deselect');
+    let activeGameCards = document.querySelectorAll('.gamecard.active');
+    for (let i = 0; i < activeGameCards.length; i++) {
+        activeGameCards[i].classList.remove('active');
+    }
+    updateDeselectButton();
+    updateSubmitButton();
+}
+
 // Function to update the mistakes counter
 function updateMistakesCounter(attempts_left) {
     const mistakeCounter = document.getElementById('mistakeCounter');
-    mistakeCounter.innerHTML = ''; // Clear existing circles
 
-    // Add circles based on the attempts left
-    for (let i = 0; i < attempts_left; i++) {
-        const circleSpan = document.createElement('span');
-        circleSpan.classList.add('material-symbols-outlined', 'filled');
-        circleSpan.textContent = 'circle'; // You may need to update this to use an appropriate icon or symbol
-        mistakeCounter.appendChild(circleSpan);
+    // Clear existing circles only if attempts_left is 4 (initial setup)
+    if (attempts_left === 4) {
+        mistakeCounter.innerHTML = '';
+
+        // Add four circles initially
+        for (let i = 0; i < 4; i++) {
+            const circleSpan = document.createElement('span');
+            circleSpan.classList.add('material-symbols-outlined', 'filled');
+            circleSpan.textContent = 'circle'; // You may need to update this to use an appropriate icon or symbol
+            mistakeCounter.appendChild(circleSpan);
+        }
+    } else {
+        // If attempts_left is not 4, remove the last circle with animation
+        const lastCircle = mistakeCounter.lastChild;
+        lastCircle.style.animation = 'zoomOut 0.5s forwards'; // Apply the animation
+        setTimeout(() => {
+            mistakeCounter.removeChild(lastCircle);
+        }, 500); // Remove the circle after the animation duration (in milliseconds)
     }
 }
+
+
 
 function removeSelectedWordsFromBoard() {
     // Get the selected words
@@ -35,7 +80,7 @@ function removeSelectedWordsFromBoard() {
 function insertSolvedCard(submittedWords, category, value) {
     // Create a new div element for the solved card
     let solvedCardDiv = document.createElement('div');
-    solvedCardDiv.classList.add('solvedcard', 'solvedcardText', 'col-span-4');
+    solvedCardDiv.classList.add('solvedcard', 'solvedcardText', 'col-span-4', 'abyssinica-sil-regular');
     if(value === 0){
         solvedCardDiv.style.backgroundColor = '#f9df6d';
     } else if (value === 1){
@@ -115,7 +160,7 @@ function handleCheckResponse(data) {
 
     if (result === 'right') {
         // Handle 'right' response
-        console.log('Right');
+        console.log(result);
         console.log('Value:', value);
         console.log('Attempts Left:', attempts_left);
         console.log('Category:', category);
@@ -125,16 +170,23 @@ function handleCheckResponse(data) {
         insertSolvedCard(submitted_words, category, value);
     } else if (result === 'one-off') {
         // Handle 'one-off' response
-        console.log('One-off');
+        console.log(result);
         console.log('Value:', value);
         console.log('Attempts Left:', attempts_left);
+        window.alert("One Off")
         updateMistakesCounter(attempts_left)
     } else if (result === 'wrong') {
         // Handle 'wrong' response
-        console.log('Wrong');
+        console.log(result);
         console.log('Value:', value);
         console.log('Attempts Left:', attempts_left);
         updateMistakesCounter(attempts_left)
+    } else if (result == 'gameover') {
+        console.log(result);
+        updateMistakesCounter(attempts_left)
+        deselectAll()
+        window.alert("Game Over")
+        
     }
 }
 
@@ -146,7 +198,6 @@ window.addEventListener('DOMContentLoaded', (event) => {
     let submitButton = document.getElementById('submit');
     let shuffleButton = document.getElementById('shuffle');
     let attempts_left = 4;
-    console.log('Game Start Attempts Left:', attempts_left);
     updateMistakesCounter(attempts_left)
     //Selection of cards - Toggle on and off
     if (gameCards.length > 0) {
@@ -164,33 +215,12 @@ window.addEventListener('DOMContentLoaded', (event) => {
     
     //Deselect button function when clicked
     deselectButton.addEventListener('click', function() {
-        let activeGameCards = document.querySelectorAll('.gamecard.active');
-        for (let i = 0; i < activeGameCards.length; i++) {
-            activeGameCards[i].classList.remove('active');
-        }
+        deselectAll()
         updateDeselectButton();
         updateSubmitButton();
     });
 
-    function updateDeselectButton() {
-        let activeGameCardsCount = document.querySelectorAll('.gamecard.active').length;
-        if (activeGameCardsCount > 0) {
-            deselectButton.removeAttribute('disabled');
-        } else {
-            deselectButton.setAttribute('disabled', 'disabled');
-        }
-    }
 
-    function updateSubmitButton() {
-        let activeGameCardsCount = document.querySelectorAll('.gamecard.active').length;
-        if (activeGameCardsCount === 4) {
-            submitButton.removeAttribute('disabled');
-            submitButton.classList.add('submitbtn');
-        } else {
-            submitButton.setAttribute('disabled', 'disabled');
-            submitButton.classList.remove('submitbtn');
-        }
-    }
 
     // Shuffle button function when clicked
     shuffleButton.addEventListener('click', function() {
@@ -224,7 +254,5 @@ window.addEventListener('DOMContentLoaded', (event) => {
     // Add an event listener to the submit button
     submitButton.addEventListener('click', function() {
         submitWords();
-});
-
-
+    });
 });

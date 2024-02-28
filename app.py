@@ -7,22 +7,22 @@ app = Flask(__name__)
 
 # Define words with their associated values
 words = [
-    {'word': 'apple', 'value': 0, 'category':'fruits'},
-    {'word': 'orange', 'value': 0, 'category':'fruits'},
-    {'word': 'banana', 'value': 0, 'category':'fruits'},
-    {'word': 'grape', 'value': 0, 'category':'fruits'},
-    {'word': 'dog', 'value': 1, 'category':'animals'},
-    {'word': 'cat', 'value': 1, 'category':'animals'},
-    {'word': 'bird', 'value': 1, 'category':'animals'},
-    {'word': 'fish', 'value': 1, 'category':'animals'},
-    {'word': 'book', 'value': 2, 'category':'things'},
-    {'word': 'wrench', 'value': 2, 'category':'things'},
-    {'word': 'mouse', 'value': 2, 'category':'things'},
-    {'word': 'tripod', 'value': 2, 'category':'things'},
-    {'word': 'beautiful', 'value': 3, 'category':'adjectives'},
-    {'word': 'smart', 'value': 3, 'category':'adjectives'},
-    {'word': 'tall', 'value': 3, 'category':'adjectives'},
-    {'word': 'rich', 'value': 3, 'category':'adjectives'},
+    {'word': 'አህያ', 'value': 0, 'category':'የቤት እንስሳት'},
+    {'word': 'ውሻ', 'value': 0, 'category':'የቤት እንስሳት'},
+    {'word': 'ፍየል', 'value': 0, 'category':'የቤት እንስሳት'},
+    {'word': 'በሬ', 'value': 0, 'category':'የቤት እንስሳት'},
+    {'word': 'ንጉስ', 'value': 1, 'category':'የቼዝ መጫወቻዎች'},
+    {'word': 'ንግስት', 'value': 1, 'category':'የቼዝ መጫወቻዎች'},
+    {'word': 'ወታደር', 'value': 1, 'category':'የቼዝ መጫወቻዎች'},
+    {'word': 'ፈረስ', 'value': 1, 'category':'የቼዝ መጫወቻዎች'},
+    {'word': 'ላሊበላ', 'value': 2, 'category':'ታሪካዊ መዳረሻዎች'},
+    {'word': 'ሀረር', 'value': 2, 'category':'ታሪካዊ መዳረሻዎች'},
+    {'word': 'ጅማ', 'value': 2, 'category':'ታሪካዊ መዳረሻዎች'},
+    {'word': 'ጎንደር', 'value': 2, 'category':'ታሪካዊ መዳረሻዎች'},
+    {'word': 'አክሱም', 'value': 3, 'category':'ሀውልቶች'},
+    {'word': 'ምኒልክ', 'value': 3, 'category':'ሀውልቶች'},
+    {'word': 'ሰማዕታት', 'value': 3, 'category':'ሀውልቶች'},
+    {'word': 'ትግላችን', 'value': 3, 'category':'ሀውልቶች'},
 ]
 
 # Define the maximum number of attempts
@@ -50,7 +50,7 @@ def check():
     global attempts_left  # Declare attempts_left as global variable
     print('inside check')
     print(attempts_left)
-    
+
     # Receive the set of four words submitted from the frontend
     submitted_words = request.json['submittedWords']
     # Extract the values and categories of the submitted words
@@ -74,14 +74,18 @@ def check():
     
     # Check if only one word has a different value
     elif len(set(submitted_values)) == 2:
-        # Decrease attempts left by one
-        attempts_left -= 1
-        print(attempts_left)
-        return jsonify({'result': 'one-off', 'value': None, 'attempts_left': attempts_left, 'submitted_words': None, 'category':None})
+        if attempts_left == 1:  # Check if it's the last attempt
+            return jsonify({'result': 'gameover', 'value': None, 'attempts_left': attempts_left, 'submitted_words': None, 'category':None})
+        else:
+            attempts_left -= 1
+            print(attempts_left)
+            return jsonify({'result': 'one-off', 'value': None, 'attempts_left': attempts_left, 'submitted_words': None, 'category':None})
     
     # More than one word has different values
     else:
-        # Decrease attempts left by one
-        attempts_left -= 1
-        print(attempts_left)
-        return jsonify({'result': 'wrong', 'value': None, 'attempts_left': attempts_left, 'submitted_words': None, 'category':None})
+        if attempts_left == 1:  # Check if it's the last attempt
+            return jsonify({'result': 'gameover', 'value': None, 'attempts_left': attempts_left, 'submitted_words': None, 'category':None})
+        else:  
+            attempts_left -= 1
+            print(attempts_left)
+            return jsonify({'result': 'wrong', 'value': None, 'attempts_left': attempts_left, 'submitted_words': None, 'category':None})

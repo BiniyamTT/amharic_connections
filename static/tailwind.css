@@ -726,6 +726,16 @@ video {
   outline-offset: 0px;
 }
 
+.body{
+  background-color: #e2e8f0;
+}
+
+.abyssinica-sil-regular {
+  font-family: "Abyssinica SIL", serif;
+  font-weight: 400;
+  font-style: normal;
+}
+
 .material-symbols-outlined {
   font-variation-settings:
   'FILL' 0,
@@ -750,12 +760,13 @@ hr{
 
 .gamecard{
   font-weight: 500;
+  font-size: larger;
   display: flex;
   align-items: center;
   justify-content: center;
   width: 9.375rem;
   height: 5rem;
-  border: 1px solid rgba(0, 0, 0, 0.26);
+  background-color: rgba(203,213,225,0.4);
   border-radius: 0.25rem;
 }
 
@@ -765,6 +776,7 @@ hr{
 }
 
 .solvedcard{
+  font-size: larger;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -828,10 +840,35 @@ hr{
   outline-color: #374151;
 }
 
+@keyframes zoomOut {
+  0% {
+    transform: scale(1);
+  }
+
+  100% {
+    transform: scale(0);
+    opacity: 0;
+    /* Fade out the circle as it scales down */
+  }
+}
+
+@keyframes bounce {
+  0%, 100% {
+    transform: translateY(0);
+  }
+
+  50% {
+    transform: translateY(-10px);
+    /* Adjust the bounce height as needed */
+  }
+}
+
 @media (max-width: 768px) {
   .gamecard{
     --cardwidth: 16dvw;
+    font-size: small;
     display: flex;
+    flex-wrap: nowrap;
     align-items: center;
     justify-content: center;
     width: var(--cardwidth);
@@ -839,11 +876,11 @@ hr{
     height: width;
     border: 1px solid rgba(0, 0, 0, 0.26);
     border-radius: 0.25rem;
-    background-color: aquamarine;
   }
 
   .solvedcard{
     display: flex;
+    text-wrap: nowrap;
     align-items: center;
     justify-content: center;
     width: auto;
@@ -858,6 +895,57 @@ hr{
     display: grid;
     text-align: center;
     align-content: center;
+  }
+
+  .gameControl {
+    border-radius: 9999px;
+    padding-left: 1.75rem;
+    padding-right: 1.75rem;
+    padding-top: 0.75rem;
+    padding-bottom: 0.75rem;
+    font-size: 0.875rem;
+    line-height: 1.25rem;
+    outline-style: solid;
+    outline-width: 1px;
+    outline-offset: 0px;
+  }
+
+  .submitbtn {
+    border-radius: 9999px;
+    --tw-bg-opacity: 1;
+    background-color: rgb(0 0 0 / var(--tw-bg-opacity));
+    padding-left: 1.75rem;
+    padding-right: 1.75rem;
+    padding-top: 0.75rem;
+    padding-bottom: 0.75rem;
+    font-size: 0.875rem;
+    line-height: 1.25rem;
+    --tw-text-opacity: 1;
+    color: rgb(255 255 255 / var(--tw-text-opacity));
+  }
+
+  .gameControl:disabled {
+    pointer-events: none;
+    cursor: not-allowed;
+    border-radius: 9999px;
+    padding-left: 1.75rem;
+    padding-right: 1.75rem;
+    padding-top: 0.75rem;
+    padding-bottom: 0.75rem;
+    font-size: 0.875rem;
+    line-height: 1.25rem;
+    opacity: 0.5;
+    outline-style: solid;
+    outline-width: 1px;
+    outline-offset: 0px;
+  }
+
+  .gameControl:disabled:disabled {
+    outline-color: #374151;
+  }
+
+  .gameControl{
+    text-wrap: nowrap;
   }
 }
 
