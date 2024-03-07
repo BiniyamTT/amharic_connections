@@ -57,7 +57,27 @@ hr{
     align-content: center;
     
 }
+.helpColor{
+    width: 20px;
+    height: 20px;
+    margin-right: 10px;
+    display: inline-flex;
+    border-radius: 3px;
+}
 
+.helpClose{
+    display: block;
+    cursor: pointer;
+    position: absolute;
+    right: 0;
+    top: 0;
+    padding: 1.2rem;
+    font-weight: 700;
+}
+
+#help{
+
+}
 
 .gameControl{
     @apply rounded-full outline outline-offset-0 outline-1 px-10 py-3 text-base;

@@ -243,7 +243,8 @@ window.addEventListener('DOMContentLoaded', (event) => {
         let activeGameCards = document.querySelectorAll('.gamecard.active');
         let gameCards = document.getElementsByClassName('gamecard');
         let gameCardsArray = Array.from(gameCards);
-
+        let showHelpBtn = document.getElementById('showHelpBtn');
+        let hideHelpBtn = document.getElementById('hideHelpBtn');
         activeGameCards.forEach(card => {
             selectedWords.push(card.textContent.trim());
             card.classList.remove('active');
@@ -268,5 +269,21 @@ window.addEventListener('DOMContentLoaded', (event) => {
     // Add an event listener to the submit button
     submitButton.addEventListener('click', function() {
         submitWords();
+    });
+
+    hideHelpBtn.addEventListener( 'click', function() {
+        console.log('Hide help button clicked')
+        let helpSection = document.getElementById('help');
+        let fieldSection = document.getElementById('field');
+        helpSection.style.display = 'none';
+        fieldSection.style.display = 'flex';
+    });
+
+    showHelpBtn.addEventListener( 'click', function() {
+        console.log('Show help button clicked')
+        let helpSection = document.getElementById('help');
+        let fieldSection = document.getElementById('field');
+        helpSection.style.display = 'block';
+        fieldSection.style.display = 'none';
     });
 });

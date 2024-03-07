@@ -13,7 +13,7 @@
     <link href="https://fonts.googleapis.com/css2?family=Libre+Franklin:ital,wght@0,100..900;1,100..900&display=swap" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=Abyssinica+SIL&display=swap" rel="stylesheet">
     <script src="https://kit.fontawesome.com/2894839818.js" crossorigin="anonymous"></script>
-    <title>AmhariConnections</title>
+    <title>Amharic Connections</title>
   </head>
 
   <body class="bg-slate-200 font-libre pb-12">
@@ -26,7 +26,7 @@
           <a href="#"><button class="rounded outline outline-offset-0 outline-1 px-10 py-3 text-xs font-bold hover:bg-black hover:text-white ">LOG IN</button></a>
         </div>
         <div class="lg:hidden">
-          <span class="material-symbols-outlined">menu</span>
+          <i class="fa-solid fa-bars"></i>
         </div>
       </div>
     </header>
@@ -35,7 +35,7 @@
     <section id="dateContainer"> 
       <div class="container flex justify-between items-center mx-auto py-3 px-12 md:px-14 lg:px-24 w-full">
         <div class="datecontainer">{{ date }}</div>
-        <div class="help"><button><i class="fa-regular fa-circle-question fa-lg"></i></button></div>
+        <div class="help"><button id="showHelpBtn"><i class="fa-regular fa-circle-question fa-lg"></i></button></div>
       </div>
     </section>
 
@@ -47,7 +47,42 @@
       </div>
     </section>
 
-    <section id="field">
+
+    <section id="help">
+      <div class="flex justify-center">
+        <div class="block max-w-screen-sm p-8 bg-slate-300 border-gray-200 rounded-sm shadow">
+          <div class="flex justify-end "><button id="hideHelpBtn"><i class="fa-solid fa-xmark"></i></button></div>
+          <p class="text-2xl font-bold">How to Play</p>
+          <p class="text-base font-medium mb-5">Find groups of four items that share something in common.</p>
+          <ul class="list-inside list-disc text-sm mb-5">
+            <li>Select four items and tap <b>'Submit'</b> to check if your guess is correct.</li>
+            <li>Find the groups without making 4 mistakes!</li>
+          </ul>
+          <p class="text-sm font-bold"> Category Examples</p>
+          <ul class="list-inside list-disc text-sm mb-5">
+            <li>FISH: Bass, Flounder, Salmon, Trout</li> 
+            <li>FIRE ___: Ant, Drill, Island, Opal</li>
+          </ul>
+
+          <p class="text-sm mb-5">Categories will always be more specific than "5-LETTER-WORDS," "NAMES" or "VERBS."</p>
+
+          <p class="text-sm mb-5">Each puzzle has exactly one solution. Watch out for words that seem to belong to multiple categories!</p>
+
+          <p class="text-sm mb-2">Each group is assigned a color, which will be revealed as you solve:</p>
+          <div class="levelContainer max-w-16 grid justify-center grid-cols-2 gap-2">
+            <span class="helpColor"style="background-color: rgb(249, 223, 109);"></span> <p class="text-sm">Straightforward</p>
+            <span class="helpColor"style="background-color: rgb(160, 195, 90);"></span> <p class="text-sm">Medium</p>
+            <span class="helpColor"style="background-color: rgb(176, 196, 239);"></span> <p class="text-sm">Difficult</p>
+            <span class="helpColor"style="background-color: rgb(186, 129, 197);"></span> <p class="text-sm">Tricky</p>
+          </div>
+          
+          
+        </div>
+    </div>
+  </section>
+
+
+    <section id="field" style="display:none;">
       <div class="grid justify-center mx-auto pb-4 px-12 md:px-14 lg:px-24 w-full">
         <div class="gameboard grid grid-cols-4 gap-4">
           <!-- Content here
