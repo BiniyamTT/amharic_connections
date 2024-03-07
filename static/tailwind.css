@@ -736,21 +736,9 @@ video {
   font-style: normal;
 }
 
-.material-symbols-outlined {
-  font-variation-settings:
-  'FILL' 0,
-  'wght' 400,
-  'GRAD' 0,
-  'opsz' 24
-}
-
-.material-symbols-outlined.filled{
+.misscircle{
+  margin-left: 4px;
   color: rgb(90, 89, 78);
-  font-variation-settings:
-    'FILL' 1,
-    'wght' 100,
-    'GRAD' -25,
-    'opsz' 20
 }
 
 hr{

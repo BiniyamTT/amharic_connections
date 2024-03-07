@@ -15,8 +15,9 @@ function updateSubmitButton() {
         submitButton.removeAttribute('disabled');
         submitButton.classList.add('submitbtn');
     } else {
-        submitButton.setAttribute('disabled', 'disabled');
         submitButton.classList.remove('submitbtn');
+        submitButton.setAttribute('disabled', 'disabled');
+        
     }
 }
 
@@ -50,10 +51,9 @@ function updateMistakesCounter(attempts_left) {
 
         // Add four circles initially
         for (let i = 0; i < 4; i++) {
-            const circleSpan = document.createElement('span');
-            circleSpan.classList.add('material-symbols-outlined', 'filled');
-            circleSpan.textContent = 'circle'; // You may need to update this to use an appropriate icon or symbol
-            mistakeCounter.appendChild(circleSpan);
+            const circlei = document.createElement('i');
+            circlei.classList.add('misscircle','fa-solid', 'fa-circle', 'fa-lg');
+            mistakeCounter.appendChild(circlei);
         }
     } else {
         // If attempts_left is not 4, remove the last circle with animation
@@ -122,9 +122,9 @@ function submitWords() {
     // Extract the word and value for each selected word
     let submittedWords = [];
     selectedWords.forEach(word => {
-        submittedWords.push({ word: word.textContent.trim(), value: parseInt(word.dataset.value) });
+        submittedWords.push(word.textContent.trim());
     });
-
+    console.log(submittedWords)
     // Disable the submit button while the request is being made
     document.getElementById('submit').setAttribute('disabled', 'disabled');
 
@@ -142,11 +142,12 @@ function submitWords() {
         handleCheckResponse(data);
     })
     .catch(error => {
-        console.error('Error:', error);
+        console.error('Error in app.py:', error);
     })
     .finally(() => {
         // Re-enable the submit button after the request is complete
-        document.getElementById('submit').removeAttribute('disabled');
+        //document.getElementById('submit').removeAttribute('disabled');
+        deselectAll()
     });
 }
 
@@ -197,8 +198,21 @@ window.addEventListener('DOMContentLoaded', (event) => {
     let deselectButton = document.getElementById('deselect');
     let submitButton = document.getElementById('submit');
     let shuffleButton = document.getElementById('shuffle');
+
+    fetch('/reset-attempts', {
+        method: 'POST'
+    });
     let attempts_left = 4;
+    console.log(attempts_left)
     updateMistakesCounter(attempts_left)
+
+    window.addEventListener('load', function() {
+        // Send an HTTP POST request to the Flask backend
+        fetch('/reset-attempts', {
+            method: 'POST'
+        });
+    });
+
     //Selection of cards - Toggle on and off
     if (gameCards.length > 0) {
         for (let i = 0; i < gameCards.length; i++) {

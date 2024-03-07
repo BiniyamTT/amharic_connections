@@ -12,3 +12,10 @@ htmlcov/
 dist/
 build/
 *.egg-info/
+
+
+biniyam*
+aws*
+clipboard*
+scriptv2*
+flask_session*

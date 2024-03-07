@@ -11,8 +11,8 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Libre+Franklin:ital,wght@0,100..900;1,100..900&display=swap" rel="stylesheet">
-    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" rel="stylesheet" />
     <link href="https://fonts.googleapis.com/css2?family=Abyssinica+SIL&display=swap" rel="stylesheet">
+    <script src="https://kit.fontawesome.com/2894839818.js" crossorigin="anonymous"></script>
     <title>AmhariConnections</title>
   </head>
 
@@ -35,7 +35,7 @@
     <section id="dateContainer"> 
       <div class="container flex justify-between items-center mx-auto py-3 px-12 md:px-14 lg:px-24 w-full">
         <div class="datecontainer">{{ date }}</div>
-        <div class="help"><button><span class="material-symbols-outlined">help</span></button></div>
+        <div class="help"><button><i class="fa-regular fa-circle-question fa-lg"></i></button></div>
       </div>
     </section>
 
@@ -67,7 +67,7 @@
     <section id="mistakes"> 
       <div class="flex justify-center items-center space-x-2 mx-auto py-2 px-12 md:px-14 lg:px-24 w-full">
         <div class="datecontainer">Mistakes remaining:</div>
-        <div class="misscounter flex items-center space-x-" id="mistakeCounter">
+        <div class="misscounter flex items-center" id="mistakeCounter">
           <!-- Circles will be dynamically added here -->
         </div>
       </div>
