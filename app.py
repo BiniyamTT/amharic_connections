@@ -19,22 +19,22 @@ Session(app)
 
 # Define words with their associated values
 words = [
-    {'word': 'አህያ', 'value': 0, 'category':'የቤት እንስሳት'},
-    {'word': 'ውሻ', 'value': 0, 'category':'የቤት እንስሳት'},
-    {'word': 'ፍየል', 'value': 0, 'category':'የቤት እንስሳት'},
-    {'word': 'በሬ', 'value': 0, 'category':'የቤት እንስሳት'},
-    {'word': 'ንጉስ', 'value': 1, 'category':'የቼዝ መጫወቻዎች'},
-    {'word': 'ንግስት', 'value': 1, 'category':'የቼዝ መጫወቻዎች'},
-    {'word': 'ወታደር', 'value': 1, 'category':'የቼዝ መጫወቻዎች'},
-    {'word': 'ፈረስ', 'value': 1, 'category':'የቼዝ መጫወቻዎች'},
-    {'word': 'ላሊበላ', 'value': 2, 'category':'ታሪካዊ መዳረሻዎች'},
-    {'word': 'ሀረር', 'value': 2, 'category':'ታሪካዊ መዳረሻዎች'},
-    {'word': 'ጅማ', 'value': 2, 'category':'ታሪካዊ መዳረሻዎች'},
-    {'word': 'ጎንደር', 'value': 2, 'category':'ታሪካዊ መዳረሻዎች'},
-    {'word': 'አክሱም', 'value': 3, 'category':'ሀውልቶች'},
-    {'word': 'ምኒልክ', 'value': 3, 'category':'ሀውልቶች'},
-    {'word': 'ሰማዕታት', 'value': 3, 'category':'ሀውልቶች'},
-    {'word': 'ትግላችን', 'value': 3, 'category':'ሀውልቶች'},
+    {'word': 'ኮፍያ', 'value': 0, 'category':'የጭንቅላት መሸፈኛዎች'},
+    {'word': 'ሻሽ', 'value': 0, 'category':'የጭንቅላት መሸፈኛዎች'},
+    {'word': 'ባርኔጣ', 'value': 0, 'category':'የጭንቅላት መሸፈኛዎች'},
+    {'word': 'ቆብ', 'value': 0, 'category':'የጭንቅላት መሸፈኛዎች'},
+    {'word': 'ትኩሳት', 'value': 1, 'category':'መፃሕፍት'},
+    {'word': 'ሠመመን', 'value': 1, 'category':'መፃሕፍት'},
+    {'word': 'ልጅነት', 'value': 1, 'category':'መፃሕፍት'},
+    {'word': 'መረቅ', 'value': 1, 'category':'መፃሕፍት'},
+    {'word': 'እጅ', 'value': 2, 'category':'____ ኳስ'},
+    {'word': 'እግር', 'value': 2, 'category':'____ ኳስ'},
+    {'word': 'ቅርጫት', 'value': 2, 'category':'____ ኳስ'},
+    {'word': 'መረብ', 'value': 2, 'category':'____ ኳስ'},
+    {'word': 'አክሊል', 'value': 3, 'category':'ከአረብኛ የተወረሱ ቃላት'},
+    {'word': 'ቲማቲም', 'value': 3, 'category':'ከአረብኛ የተወረሱ ቃላት'},
+    {'word': 'ባሕር', 'value': 3, 'category':'ከአረብኛ የተወረሱ ቃላት'},
+    {'word': 'ስኳር', 'value': 3, 'category':'ከአረብኛ የተወረሱ ቃላት'},
 ]
 
 @app.route('/reset-attempts', methods=['POST'])
@@ -51,7 +51,7 @@ def reset_attempts():
 # Capitalize and Randomize word order
 word_list = [word['word'] for word in words]
 uppercase_words = [word.upper() for word in word_list]
-random.seed(42)
+random.seed(23)
 random.shuffle(uppercase_words)
 
 # Get and format today's date

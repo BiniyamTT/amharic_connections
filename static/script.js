@@ -52,7 +52,7 @@ function updateMistakesCounter(attempts_left) {
         // Add four circles initially
         for (let i = 0; i < 4; i++) {
             const circlei = document.createElement('i');
-            circlei.classList.add('misscircle','fa-solid', 'fa-circle', 'fa-lg');
+            circlei.classList.add('misscircle','fa-solid', 'fa-circle');
             mistakeCounter.appendChild(circlei);
         }
     } else {
@@ -99,7 +99,7 @@ function insertSolvedCard(submittedWords, category, value) {
 
     // Set text content for category and words
     categoryDiv.textContent = category;
-    wordsDiv.textContent = submittedWords.map(word => word.word).join(', ');
+    wordsDiv.textContent = submittedWords.map(word => word).join(', ');
 
     // Append category and words divs to solved card div
     solvedCardDiv.appendChild(categoryDiv);
