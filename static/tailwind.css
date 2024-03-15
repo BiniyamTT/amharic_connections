@@ -952,8 +952,8 @@ hr{
 
 @media (max-width: 768px) {
   .gamecard{
-    --cardwidth: 16dvw;
-    font-size: small;
+    --cardwidth: 20vw;
+    font-size: medium;
     display: flex;
     flex-wrap: nowrap;
     align-items: center;
@@ -961,7 +961,6 @@ hr{
     width: var(--cardwidth);
     height: var(--cardwidth);
     height: width;
-    border: 1px solid rgba(0, 0, 0, 0.26);
     border-radius: 0.25rem;
   }
 
@@ -1044,6 +1043,13 @@ hr{
 .hover\:text-white:hover {
   --tw-text-opacity: 1;
   color: rgb(255 255 255 / var(--tw-text-opacity));
+}
+
+@media (min-width: 640px) {
+  .sm\:px-4 {
+    padding-left: 1rem;
+    padding-right: 1rem;
+  }
 }
 
 @media (min-width: 768px) {

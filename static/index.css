@@ -113,8 +113,8 @@ hr{
 
 @media (max-width: 768px) {  
     .gamecard{
-        --cardwidth: 16dvw;
-        font-size: small;
+        --cardwidth: 20vw;
+        font-size: medium;
         display: flex;
         flex-wrap: nowrap;
         align-items: center;
@@ -122,7 +122,6 @@ hr{
         width: var(--cardwidth);
         height: var(--cardwidth);
         height: width;
-        border: 1px solid rgba(0, 0, 0, 0.26);
         border-radius: 0.25rem;
     }  
 
