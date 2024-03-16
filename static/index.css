@@ -31,7 +31,7 @@ hr{
     justify-content: center;
     width: 9.375rem;
     height: 5rem;
-    background-color: rgba(203,213,225,0.4);
+    background-color: rgba(203, 213, 225, 0.60);
     border-radius: 0.25rem;
 }
 .gamecard.active{
@@ -75,8 +75,18 @@ hr{
     font-weight: 700;
 }
 
-#help{
-
+.custom-alert {
+    position: fixed;
+    top: 35%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background-color: black;
+    color: white;
+    font-size: 14px;
+    padding: 15px 25px;
+    border-radius: 5px;
+    z-index: 9999;
+    display: none; /* Initially hidden */
 }
 
 .gameControl{
@@ -101,17 +111,23 @@ hr{
     }
   }
 
-@keyframes bounce {
-0%, 100% {
-    transform: translateY(0);
+.animate__animated.animate__shakeY {
+--animate-duration: 0.4s;
 }
-50% {
-    transform: translateY(-10px); /* Adjust the bounce height as needed */
-}
-}
-  
 
-@media (max-width: 768px) {  
+
+@media (max-width: 640px) {  
+    .container{
+        justify-content: space-between;
+        align-items: center;
+        width: 100%;
+        display: flex;
+        margin-left: auto;
+        margin-right: auto;
+        padding-left: 1rem;
+        padding-right: 1rem;
+    }
+
     .gamecard{
         --cardwidth: 20vw;
         font-size: medium;
@@ -131,9 +147,8 @@ hr{
         align-items: center;
         justify-content: center;
         width: auto;
-        min-width: 48dvw;
+        min-width: 90vw;
         height: 5rem;
-        border: 1px solid rgba(0, 0, 0, 0.26);
         border-radius: 0.25rem;
     }
     .solvedcardText{
@@ -142,16 +157,49 @@ hr{
         text-align: center;
         align-content: center;
     }
-    .gameControl{
-        @apply rounded-full outline outline-offset-0 outline-1 px-7 py-3 text-sm;
+    .gameControl {
+        border-radius: 9999px;
+        padding-left: 1.5rem;
+        padding-right: 1.5rem;
+        padding-top: 0.75rem;
+        padding-bottom: 0.75rem;
+        font-size: 0.75rem;
+        line-height: 0.6rem;
+        outline-style: solid;
+        outline-width: 1px;
+        outline-offset: 0px;
+    }
+
+    .gameControl:disabled {
+        pointer-events: none;
+        cursor: not-allowed;
+        border-radius: 9999px;
+        padding-left: 1.5rem;
+        padding-right: 1.5rem;
+        padding-top: 0.75rem;
+        padding-bottom: 0.75rem;
+        font-size: 0.75rem;
+        line-height: 0.6rem;
+        opacity: 0.5;
+        outline-style: solid;
+        outline-width: 1px;
+        outline-offset: 0px;
     }
     
     .submitbtn{
-        @apply rounded-full bg-black text-white px-7 py-3 text-sm;
-    }
-    
-    .gameControl:disabled{
-        @apply disabled:outline-gray-700 cursor-not-allowed opacity-50 rounded-full outline outline-offset-0 outline-1 px-7 py-3 text-sm pointer-events-none
+        border-radius: 9999px;
+        padding-left: 1.5rem;
+        padding-right: 1.5rem;
+        padding-top: 0.75rem;
+        padding-bottom: 0.75rem;
+        font-size: 0.75rem;
+        line-height: 0.6rem;
+        outline-style: solid;
+        outline-width: 1px;
+        outline-offset: 0px;
+        background-color: black;
+        color: white;
+     
     }
     
     .gameControl{

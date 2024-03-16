@@ -19,22 +19,22 @@ Session(app)
 
 # Define words with their associated values
 words = [
-    {'word': 'ኮፍያ', 'value': 0, 'category':'የጭንቅላት መሸፈኛዎች'},
-    {'word': 'ሻሽ', 'value': 0, 'category':'የጭንቅላት መሸፈኛዎች'},
-    {'word': 'ባርኔጣ', 'value': 0, 'category':'የጭንቅላት መሸፈኛዎች'},
-    {'word': 'ቆብ', 'value': 0, 'category':'የጭንቅላት መሸፈኛዎች'},
-    {'word': 'ትኩሳት', 'value': 1, 'category':'መፃሕፍት'},
-    {'word': 'ሠመመን', 'value': 1, 'category':'መፃሕፍት'},
-    {'word': 'ልጅነት', 'value': 1, 'category':'መፃሕፍት'},
-    {'word': 'መረቅ', 'value': 1, 'category':'መፃሕፍት'},
-    {'word': 'እጅ', 'value': 2, 'category':'____ ኳስ'},
-    {'word': 'እግር', 'value': 2, 'category':'____ ኳስ'},
-    {'word': 'ቅርጫት', 'value': 2, 'category':'____ ኳስ'},
-    {'word': 'መረብ', 'value': 2, 'category':'____ ኳስ'},
-    {'word': 'አክሊል', 'value': 3, 'category':'ከአረብኛ የተወረሱ ቃላት'},
-    {'word': 'ቲማቲም', 'value': 3, 'category':'ከአረብኛ የተወረሱ ቃላት'},
-    {'word': 'ባሕር', 'value': 3, 'category':'ከአረብኛ የተወረሱ ቃላት'},
-    {'word': 'ስኳር', 'value': 3, 'category':'ከአረብኛ የተወረሱ ቃላት'},
+    {'word': 'ገናሌ', 'value': 0, 'category':'ወንዞች'},
+    {'word': 'ተከዜ', 'value': 0, 'category':'ወንዞች'},
+    {'word': 'አኮቦ', 'value': 0, 'category':'ወንዞች'},
+    {'word': 'ኦሞ', 'value': 0, 'category':'ወንዞች'},
+    {'word': 'አዋሽ', 'value': 1, 'category':'ባንኮች'},
+    {'word': 'ቡና', 'value': 1, 'category':'ባንኮች'},
+    {'word': 'ዘመን', 'value': 1, 'category':'ባንኮች'},
+    {'word': 'እናት', 'value': 1, 'category':'ባንኮች'},
+    {'word': 'ጥጥ', 'value': 2, 'category':'ነጫጭ ነገሮች'},
+    {'word': 'ወተት', 'value': 2, 'category':'ነጫጭ ነገሮች'},
+    {'word': 'ደመና', 'value': 2, 'category':'ነጫጭ ነገሮች'},
+    {'word': 'ጥርስ', 'value': 2, 'category':'ነጭ ነገሮች'},
+    {'word': 'ዬቶድ', 'value': 3, 'category':'የይስማዓከ ወርቁ መጻሕፍት'},
+    {'word': 'ተልሚድ', 'value': 3, 'category':'የይስማዓከ ወርቁ መጻሕፍት'},
+    {'word': 'ዛምራ', 'value': 3, 'category':'የይስማዓከ ወርቁ መጻሕፍት'},
+    {'word': 'ሜሎስ', 'value': 3, 'category':'የይስማዓከ ወርቁ መጻሕፍት'},
 ]
 
 @app.route('/reset-attempts', methods=['POST'])
@@ -51,7 +51,7 @@ def reset_attempts():
 # Capitalize and Randomize word order
 word_list = [word['word'] for word in words]
 uppercase_words = [word.upper() for word in word_list]
-random.seed(23)
+random.seed(88)
 random.shuffle(uppercase_words)
 
 # Get and format today's date

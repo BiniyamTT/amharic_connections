@@ -721,6 +721,11 @@ video {
   padding-right: 3rem;
 }
 
+.px-4 {
+  padding-left: 1rem;
+  padding-right: 1rem;
+}
+
 .py-2 {
   padding-top: 0.5rem;
   padding-bottom: 0.5rem;
@@ -739,10 +744,6 @@ video {
 .py-6 {
   padding-top: 1.5rem;
   padding-bottom: 1.5rem;
-}
-
-.pb-12 {
-  padding-bottom: 3rem;
 }
 
 .pb-4 {
@@ -832,7 +833,7 @@ hr{
   justify-content: center;
   width: 9.375rem;
   height: 5rem;
-  background-color: rgba(203,213,225,0.4);
+  background-color: rgba(203, 213, 225, 0.60);
   border-radius: 0.25rem;
 }
 
@@ -877,7 +878,19 @@ hr{
   font-weight: 700;
 }
 
-#help{
+.custom-alert {
+  position: fixed;
+  top: 35%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  background-color: black;
+  color: white;
+  font-size: 14px;
+  padding: 15px 25px;
+  border-radius: 5px;
+  z-index: 9999;
+  display: none;
+  /* Initially hidden */
 }
 
 .gameControl {
@@ -939,18 +952,22 @@ hr{
   }
 }
 
-@keyframes bounce {
-  0%, 100% {
-    transform: translateY(0);
-  }
-
-  50% {
-    transform: translateY(-10px);
-    /* Adjust the bounce height as needed */
-  }
+.animate__animated.animate__shakeY {
+  --animate-duration: 0.4s;
 }
 
-@media (max-width: 768px) {
+@media (max-width: 640px) {
+  .container{
+    justify-content: space-between;
+    align-items: center;
+    width: 100%;
+    display: flex;
+    margin-left: auto;
+    margin-right: auto;
+    padding-left: 1rem;
+    padding-right: 1rem;
+  }
+
   .gamecard{
     --cardwidth: 20vw;
     font-size: medium;
@@ -970,9 +987,8 @@ hr{
     align-items: center;
     justify-content: center;
     width: auto;
-    min-width: 48dvw;
+    min-width: 90vw;
     height: 5rem;
-    border: 1px solid rgba(0, 0, 0, 0.26);
     border-radius: 0.25rem;
   }
 
@@ -985,49 +1001,46 @@ hr{
 
   .gameControl {
     border-radius: 9999px;
-    padding-left: 1.75rem;
-    padding-right: 1.75rem;
+    padding-left: 1.5rem;
+    padding-right: 1.5rem;
     padding-top: 0.75rem;
     padding-bottom: 0.75rem;
-    font-size: 0.875rem;
-    line-height: 1.25rem;
+    font-size: 0.75rem;
+    line-height: 0.6rem;
     outline-style: solid;
     outline-width: 1px;
     outline-offset: 0px;
-  }
-
-  .submitbtn {
-    border-radius: 9999px;
-    --tw-bg-opacity: 1;
-    background-color: rgb(0 0 0 / var(--tw-bg-opacity));
-    padding-left: 1.75rem;
-    padding-right: 1.75rem;
-    padding-top: 0.75rem;
-    padding-bottom: 0.75rem;
-    font-size: 0.875rem;
-    line-height: 1.25rem;
-    --tw-text-opacity: 1;
-    color: rgb(255 255 255 / var(--tw-text-opacity));
   }
 
   .gameControl:disabled {
     pointer-events: none;
     cursor: not-allowed;
     border-radius: 9999px;
-    padding-left: 1.75rem;
-    padding-right: 1.75rem;
+    padding-left: 1.5rem;
+    padding-right: 1.5rem;
     padding-top: 0.75rem;
     padding-bottom: 0.75rem;
-    font-size: 0.875rem;
-    line-height: 1.25rem;
+    font-size: 0.75rem;
+    line-height: 0.6rem;
     opacity: 0.5;
     outline-style: solid;
     outline-width: 1px;
     outline-offset: 0px;
   }
 
-  .gameControl:disabled:disabled {
-    outline-color: #374151;
+  .submitbtn{
+    border-radius: 9999px;
+    padding-left: 1.5rem;
+    padding-right: 1.5rem;
+    padding-top: 0.75rem;
+    padding-bottom: 0.75rem;
+    font-size: 0.75rem;
+    line-height: 0.6rem;
+    outline-style: solid;
+    outline-width: 1px;
+    outline-offset: 0px;
+    background-color: black;
+    color: white;
   }
 
   .gameControl{
@@ -1046,6 +1059,11 @@ hr{
 }
 
 @media (min-width: 640px) {
+  .sm\:px-12 {
+    padding-left: 3rem;
+    padding-right: 3rem;
+  }
+
   .sm\:px-4 {
     padding-left: 1rem;
     padding-right: 1rem;

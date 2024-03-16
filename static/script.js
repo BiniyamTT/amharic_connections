@@ -1,3 +1,12 @@
+function customAlert(message) {
+    var alertDiv = document.getElementById('customAlert');
+    alertDiv.innerText = message;
+    alertDiv.style.display = 'block';
+    setTimeout(function() {
+        alertDiv.style.display = 'none';
+    }, 1500); // Display for 1.5 second
+}
+
 function updateDeselectButton() {
     let activeGameCardsCount = document.querySelectorAll('.gamecard.active').length;
     let deselectButton = document.getElementById('deselect');
@@ -65,7 +74,31 @@ function updateMistakesCounter(attempts_left) {
     }
 }
 
+function animateShakeX() {
+    console.log('InsideShakeX')
+    let selectedcards = document.querySelectorAll('.gamecard.active');
+    selectedcards.forEach(function(card) {
+        card.classList.add('animate__animated', 'animate__shakeX');
+    });
+    selectedcards[0].addEventListener('animationend', () => {
+        selectedcards.forEach(function(card) {
+            card.classList.remove('animate__animated', 'animate__shakeX');
+        });
+    });
+}
 
+function animateShakeY() {
+    console.log('InsideShakeY')
+    let selectedcards = document.querySelectorAll('.gamecard.active');
+    selectedcards.forEach(function(card) {
+        card.classList.add('animate__animated', 'animate__shakeY');
+    });
+    selectedcards[0].addEventListener('animationend', () => {
+        selectedcards.forEach(function(card) {
+            card.classList.remove('animate__animated', 'animate__shakeY');
+        });
+    });
+}
 
 function removeSelectedWordsFromBoard() {
     // Get the selected words
@@ -73,14 +106,17 @@ function removeSelectedWordsFromBoard() {
 
     // Remove the entire div element for each selected word
     selectedWords.forEach(word => {
-        word.remove();
+        word.classList.add('animate__animated', 'animate__fadeOutUp');
+        setTimeout(() => {
+            word.remove();
+        }, 600);
     });
 }
 
 function insertSolvedCard(submittedWords, category, value) {
     // Create a new div element for the solved card
     let solvedCardDiv = document.createElement('div');
-    solvedCardDiv.classList.add('solvedcard', 'solvedcardText', 'col-span-4', 'abyssinica-sil-regular');
+    solvedCardDiv.classList.add('animate__animated','animate__fadeInUp','solvedcard','solvedcardText','col-span-4','abyssinica-sil-regular');
     if(value === 0){
         solvedCardDiv.style.backgroundColor = '#f9df6d';
     } else if (value === 1){
@@ -99,7 +135,7 @@ function insertSolvedCard(submittedWords, category, value) {
 
     // Set text content for category and words
     categoryDiv.textContent = category;
-    wordsDiv.textContent = submittedWords.map(word => word).join(', ');
+    wordsDiv.textContent = submittedWords.map(word => word).join('፣');
 
     // Append category and words divs to solved card div
     solvedCardDiv.appendChild(categoryDiv);
@@ -161,32 +197,35 @@ function handleCheckResponse(data) {
 
     if (result === 'right') {
         // Handle 'right' response
-        console.log(result);
-        console.log('Value:', value);
-        console.log('Attempts Left:', attempts_left);
-        console.log('Category:', category);
         // Remove the selected words from the game board
         removeSelectedWordsFromBoard();
         // Insert a new solved card with the submitted words
         insertSolvedCard(submitted_words, category, value);
     } else if (result === 'one-off') {
         // Handle 'one-off' response
-        console.log(result);
-        console.log('Value:', value);
-        console.log('Attempts Left:', attempts_left);
-        window.alert("One Off")
-        updateMistakesCounter(attempts_left)
+        animateShakeX();
+        setTimeout(() => {
+            customAlert("One Off");
+            updateMistakesCounter(attempts_left);
+        }, 600);
+        
     } else if (result === 'wrong') {
         // Handle 'wrong' response
         console.log(result);
         console.log('Value:', value);
         console.log('Attempts Left:', attempts_left);
-        updateMistakesCounter(attempts_left)
+        animateShakeX();
+        setTimeout(() => {
+            updateMistakesCounter(attempts_left);
+        }, 600);
     } else if (result == 'gameover') {
         console.log(result);
-        updateMistakesCounter(attempts_left)
-        deselectAll()
-        window.alert("Game Over")
+        animateShakeX();
+        setTimeout(() => {
+            deselectAll()
+            customAlert("Game Over");
+            updateMistakesCounter(attempts_left);
+        }, 600);
         
     }
 }
@@ -234,8 +273,6 @@ window.addEventListener('DOMContentLoaded', (event) => {
         updateSubmitButton();
     });
 
-
-
     // Shuffle button function when clicked
     shuffleButton.addEventListener('click', function() {
         // Get text content of selected words and remove active class
@@ -268,7 +305,8 @@ window.addEventListener('DOMContentLoaded', (event) => {
 
     // Add an event listener to the submit button
     submitButton.addEventListener('click', function() {
-        submitWords();
+        animateShakeY();
+        setTimeout(submitWords, 1000);
     });
 
     hideHelpBtn.addEventListener( 'click', function() {
