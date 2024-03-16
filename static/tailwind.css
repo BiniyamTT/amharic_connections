@@ -1001,8 +1001,8 @@ hr{
 
   .gameControl {
     border-radius: 9999px;
-    padding-left: 2rem;
-    padding-right: 2rem;
+    padding-left: 1.5rem;
+    padding-right: 1.5rem;
     padding-top: 0.75rem;
     padding-bottom: 0.75rem;
     font-size: 1rem;
@@ -1016,8 +1016,8 @@ hr{
     pointer-events: none;
     cursor: not-allowed;
     border-radius: 9999px;
-    padding-left: 2rem;
-    padding-right: 2rem;
+    padding-left: 1.5rem;
+    padding-right: 1.5rem;
     padding-top: 0.75rem;
     padding-bottom: 0.75rem;
     font-size: 1rem;
@@ -1030,8 +1030,8 @@ hr{
 
   .submitbtn{
     border-radius: 9999px;
-    padding-left: 2rem;
-    padding-right: 2rem;
+    padding-left: 1.5rem;
+    padding-right: 1.5rem;
     padding-top: 0.75rem;
     padding-bottom: 0.75rem;
     font-size: 1rem;
