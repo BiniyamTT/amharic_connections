@@ -1,0 +1,54 @@
+<!doctype html>
+<html lang="en">
+
+  <head>
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <link rel="stylesheet" href="{{ url_for('static', filename='tailwind.css') }}">
+    
+    <!-- Animations -->
+    <link rel="stylesheet" href="{{ url_for('static', filename='animate.min.css') }}">
+
+    <!-- Google Font -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Libre+Franklin:ital,wght@0,100..900;1,100..900&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Abyssinica+SIL&display=swap" rel="stylesheet">
+    <script src="https://kit.fontawesome.com/2894839818.js" crossorigin="anonymous"></script>
+    <link rel="icon" type="image/x-icon" href="{{ url_for('static', filename='connections.svg') }}">
+    <title>Amharic Connections</title>
+  </head>
+
+  <body class="bg-slate-200 font-libre">
+    <header class="py-6">
+      <div class="container flex justify-between items-center mx-auto md:px-14 lg:px-24 w-full">
+        <div class="flex items-center space-x-2">
+          <div class="logo"><img class="flex" src="{{ url_for('static', filename='connections.svg') }}" alt="connections" height='100%' width="100%"></div>
+          <div class="sm:text-xl md:text-xl lg:text-2xl font-bold"> Amharic Connections</div>
+        </div>
+        <div class="hidden lg:flex space-x-4 items-center">
+          <a href="#"><button class="rounded bg-black px-10 py-3 text-white text-xs font-bold">SUBSCRIBE</button></a>
+          <a href="#"><button class="rounded outline outline-offset-0 outline-1 px-10 py-3 text-xs font-bold hover:bg-black hover:text-white ">LOG IN</button></a>
+        </div>
+        <div class="lg:hidden">
+          <i class="fa-solid fa-bars"></i>
+        </div>
+      </div>
+    </header>
+    <section id="landing" class="landing flex flex-col items-center mx-auto pt-20 md:px-14 lg:px-24 w-full bg-[#b3a7fe]">
+        <div class="logoContainer pb-4">
+            <img src="{{ url_for('static', filename='connections.svg') }}" alt="">
+        </div>
+        <div class=" flex flex-row space-x-1 lg:space-x-2 items-center font-bold">
+            <p class="text-xl">Amharic</p>
+            <p class="text-xl">Connections</p>
+        </div>
+        <a href="/gameplay"><button class="submitbtn mt-24" type="submit">Play</button></a>
+        <p class="font-bold text-sm lg:text-base mt-12">{{date}}</p>
+        <p class="text-xs">By: Biniyam Tezera</p>
+    </section>
+    <hr>
+
+  </body>
+</html>

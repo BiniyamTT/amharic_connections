@@ -169,12 +169,12 @@
         transform: translateZ(0)
     }
 
-    45% {
+    90% {
         -webkit-transform: translate3d(0,-10px,0);
         transform: translate3d(0,-10px,0)
     }
 
-    90% {
+    45% {
         -webkit-transform: translate3d(0,10px,0);
         transform: translate3d(0,10px,0)
     }
@@ -186,12 +186,12 @@
         transform: translateZ(0)
     }
 
-    45% {
+    90% {
         -webkit-transform: translate3d(0,-10px,0);
         transform: translate3d(0,-10px,0)
     }
 
-    90% {
+    45% {
         -webkit-transform: translate3d(0,10px,0);
         transform: translate3d(0,10px,0)
     }

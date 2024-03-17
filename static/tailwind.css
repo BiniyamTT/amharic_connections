@@ -595,8 +595,36 @@ video {
   margin-bottom: 0.5rem;
 }
 
+.mb-4 {
+  margin-bottom: 1rem;
+}
+
 .mb-5 {
   margin-bottom: 1.25rem;
+}
+
+.mt-12 {
+  margin-top: 3rem;
+}
+
+.mt-24 {
+  margin-top: 6rem;
+}
+
+.mt-3 {
+  margin-top: 0.75rem;
+}
+
+.mt-4 {
+  margin-top: 1rem;
+}
+
+.mt-6 {
+  margin-top: 1.5rem;
+}
+
+.mt-8 {
+  margin-top: 2rem;
 }
 
 .block {
@@ -643,6 +671,14 @@ video {
   grid-template-columns: repeat(4, minmax(0, 1fr));
 }
 
+.flex-row {
+  flex-direction: row;
+}
+
+.flex-col {
+  flex-direction: column;
+}
+
 .items-center {
   align-items: center;
 }
@@ -665,6 +701,12 @@ video {
 
 .gap-4 {
   gap: 1rem;
+}
+
+.space-x-1 > :not([hidden]) ~ :not([hidden]) {
+  --tw-space-x-reverse: 0;
+  margin-right: calc(0.25rem * var(--tw-space-x-reverse));
+  margin-left: calc(0.25rem * calc(1 - var(--tw-space-x-reverse)));
 }
 
 .space-x-2 > :not([hidden]) ~ :not([hidden]) {
@@ -692,9 +734,24 @@ video {
   border-color: rgb(229 231 235 / var(--tw-border-opacity));
 }
 
+.border-gray-800 {
+  --tw-border-opacity: 1;
+  border-color: rgb(31 41 55 / var(--tw-border-opacity));
+}
+
+.bg-\[\#b3a7fe\] {
+  --tw-bg-opacity: 1;
+  background-color: rgb(179 167 254 / var(--tw-bg-opacity));
+}
+
 .bg-black {
   --tw-bg-opacity: 1;
   background-color: rgb(0 0 0 / var(--tw-bg-opacity));
+}
+
+.bg-slate-100 {
+  --tw-bg-opacity: 1;
+  background-color: rgb(241 245 249 / var(--tw-bg-opacity));
 }
 
 .bg-slate-200 {
@@ -705,6 +762,15 @@ video {
 .bg-slate-300 {
   --tw-bg-opacity: 1;
   background-color: rgb(203 213 225 / var(--tw-bg-opacity));
+}
+
+.bg-white {
+  --tw-bg-opacity: 1;
+  background-color: rgb(255 255 255 / var(--tw-bg-opacity));
+}
+
+.p-4 {
+  padding: 1rem;
 }
 
 .p-8 {
@@ -750,6 +816,14 @@ video {
   padding-bottom: 1rem;
 }
 
+.pt-20 {
+  padding-top: 5rem;
+}
+
+.text-center {
+  text-align: center;
+}
+
 .font-libre {
   font-family: "Libre Franklin", sans-serif;
 }
@@ -757,6 +831,14 @@ video {
 .text-2xl {
   font-size: 1.5rem;
   line-height: 2rem;
+}
+
+.text-\[0\.9rem\] {
+  font-size: 0.9rem;
+}
+
+.text-\[1\.5rem\] {
+  font-size: 1.5rem;
 }
 
 .text-base {
@@ -767,6 +849,11 @@ video {
 .text-sm {
   font-size: 0.875rem;
   line-height: 1.25rem;
+}
+
+.text-xl {
+  font-size: 1.25rem;
+  line-height: 1.75rem;
 }
 
 .text-xs {
@@ -807,6 +894,20 @@ video {
 
 .body{
   background-color: #e2e8f0;
+}
+
+.logo{
+  height: 1.5rem;
+  width: 1.5rem;
+}
+
+.landing{
+  height: 100vh;
+}
+
+.logoContainer img{
+  height:3rem;
+  width: 3rem;
 }
 
 .abyssinica-sil-regular {
@@ -866,6 +967,13 @@ hr{
   margin-right: 10px;
   display: inline-flex;
   border-radius: 3px;
+}
+
+.resultColor{
+  display:inline-block;
+  width: 40px;
+  height: 40px;
+  border-radius: 5px;
 }
 
 .helpClose{
@@ -957,6 +1065,11 @@ hr{
 }
 
 @media (max-width: 640px) {
+  .logo{
+    height: 1.25rem;
+    width: 1.25rem;
+  }
+
   .container{
     justify-content: space-between;
     align-items: center;
@@ -999,6 +1112,13 @@ hr{
     align-content: center;
   }
 
+  .resultColor{
+    display:inline-block;
+    width: 33px;
+    height: 33px;
+    border-radius: 5px;
+  }
+
   .gameControl {
     border-radius: 9999px;
     padding-left: 1.5rem;
@@ -1036,9 +1156,6 @@ hr{
     padding-bottom: 0.75rem;
     font-size: 1rem;
     line-height: 1rem;
-    outline-style: solid;
-    outline-width: 1px;
-    outline-offset: 0px;
     background-color: black;
     color: white;
   }
@@ -1059,21 +1176,35 @@ hr{
 }
 
 @media (min-width: 640px) {
-  .sm\:px-12 {
-    padding-left: 3rem;
-    padding-right: 3rem;
-  }
-
   .sm\:px-4 {
     padding-left: 1rem;
     padding-right: 1rem;
   }
+
+  .sm\:text-xl {
+    font-size: 1.25rem;
+    line-height: 1.75rem;
+  }
 }
 
 @media (min-width: 768px) {
+  .md\:max-w-screen-sm {
+    max-width: 640px;
+  }
+
   .md\:px-14 {
     padding-left: 3.5rem;
     padding-right: 3.5rem;
+  }
+
+  .md\:text-sm {
+    font-size: 0.875rem;
+    line-height: 1.25rem;
+  }
+
+  .md\:text-xl {
+    font-size: 1.25rem;
+    line-height: 1.75rem;
   }
 }
 
@@ -1086,8 +1217,28 @@ hr{
     display: none;
   }
 
+  .lg\:max-w-screen-sm {
+    max-width: 640px;
+  }
+
+  .lg\:space-x-2 > :not([hidden]) ~ :not([hidden]) {
+    --tw-space-x-reverse: 0;
+    margin-right: calc(0.5rem * var(--tw-space-x-reverse));
+    margin-left: calc(0.5rem * calc(1 - var(--tw-space-x-reverse)));
+  }
+
   .lg\:px-24 {
     padding-left: 6rem;
     padding-right: 6rem;
+  }
+
+  .lg\:text-2xl {
+    font-size: 1.5rem;
+    line-height: 2rem;
+  }
+
+  .lg\:text-base {
+    font-size: 1rem;
+    line-height: 1.5rem;
   }
 }

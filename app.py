@@ -37,14 +37,15 @@ words = [
     {'word': 'ሜሎስ', 'value': 3, 'category':'የይስማዓከ ወርቁ መጻሕፍት'},
 ]
 
-@app.route('/reset-attempts', methods=['POST'])
+@app.route('/reset-attempts')
 def reset_attempts():
-    # Define the maximum number of attempts
     MAX_ATTEMPTS = 4
-    # Initialize attempts left
     global attempts_left
     attempts_left = MAX_ATTEMPTS
-    
+    global attempts
+    attempts = []
+    global rights
+    rights = 0
     return('Attempts reset successfully')
 
 
@@ -58,6 +59,10 @@ random.shuffle(uppercase_words)
 date = datetime.today().strftime('%B %d, %Y')
 
 @app.route("/")
+def landing():
+   return render_template("landing.html", date=date)
+
+@app.route("/gameplay")
 def index():
    return render_template("index.html", words=uppercase_words, date=date)
 
@@ -68,24 +73,35 @@ def check():
     print(attempts_left)
     # Receive the set of four words submitted from the frontend
     submitted_words = request.json['submittedWords']
+    submitted_words_set = set(submitted_words)    
     # Extract the values and categories of the submitted words
     print(submitted_words)
     submitted_values = []
+    global attempts
     category = []
+    
+    for attempt in attempts:
+        if set(attempt) == submitted_words_set:
+            return jsonify({'result': 'already_attempted', 'value': None, 'attempts_left': attempts_left, 'submitted_words': None, 'category': None})
+    
     for submitted_word in submitted_words:
         for word in words:
-            if word['word'] == submitted_word.lower():
+            if submitted_word.lower() == word['word']:
                 submitted_values.append(word['value'])
                 category.append(word['category'])
                 break
-
+    attempts.append(submitted_words)
+    print(attempts)
     # Check if all four words have identical values
     if len(set(submitted_values)) == 1:
         value = submitted_values[0]  # Get the common value
         category = category[0].upper()  # Get the common value
-        print(attempts_left)
-        
-        return jsonify({'result': 'right', 'value': value, 'attempts_left': attempts_left, 'submitted_words': submitted_words, 'category':category})
+        global rights
+        rights += 1
+        if rights != 4 :
+            return jsonify({'result': 'right', 'value': value, 'attempts_left': attempts_left, 'submitted_words': submitted_words, 'category':category})
+        else:
+            return jsonify({'result': 'game_won', 'value': value, 'attempts_left': attempts_left, 'submitted_words': submitted_words, 'category':category})
     
     # Check if only one word has a different value
     elif len(set(submitted_values)) == 2 and (submitted_values.count(submitted_values[0]) == 3 or submitted_values.count(submitted_values[1]) == 3):
@@ -104,3 +120,31 @@ def check():
             attempts_left -= 1
             print(attempts_left)
             return jsonify({'result': 'wrong', 'value': None, 'attempts_left': attempts_left, 'submitted_words': None, 'category':None})
+
+
+@app.route("/resultbuilder")
+def result_builder():
+    print('inside result builder')
+    global attempts
+    result_rows =[]
+    row=[]
+    if len(attempts) == 4:
+        message = 'Pefect!'
+    elif len(attempts) == 5:
+        message = 'Great!'
+    elif len(attempts) == 6:
+        message = 'Solid!'
+    elif len(attempts) == 7:
+        message = 'Phew!'
+    
+    for attempt in attempts:
+        for attempt_word in attempt:
+            for word in words:
+                if attempt_word == word['word']:
+                    row.append(word['value'])
+                    break
+        result_rows.append(row)
+        row = []
+            
+    print(result_rows)
+    return jsonify({'message': message, 'result':result_rows})

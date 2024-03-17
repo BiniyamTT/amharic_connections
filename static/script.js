@@ -187,20 +187,68 @@ function submitWords() {
     });
 }
 
+function showResult() {
+    let fieldSection = document.getElementById('field');
+    let resultSection = document.getElementById('result');
+    let resultRow = document.getElementById('resultRows');
+    let mistakesSection = document.getElementById('mistakes');
+    let gameControlsSection = document.getElementById('gameControls');
+
+    resultSection.style.display = 'block';
+    fieldSection.style.display = 'none';
+    mistakesSection.style.display = 'none';
+    gameControlsSection.style.display = 'none';
+    fetch('/resultbuilder', {
+        method: 'GET'
+    })
+    .then(response => response.json())
+    .then(data => {
+        // Handle the response from the server
+        console.log(data)
+        const {message, result} = data;
+        console.log(message)
+        console.log(result)
+        for(var i = 0; i<result.length; i++){
+            let rowDiv = document.createElement('div');
+            rowDiv.classList.add('rowno1') 
+            for (var j = 0; j< result[i].length; j++) {
+                let itemSpan = document.createElement('span'); 
+                itemSpan.classList.add('resultColor');
+                if (result[i][j] === 0) {
+                    itemSpan.style.backgroundColor = '#f9df6d';
+                } else if (result[i][j] === 1){
+                    itemSpan.style.backgroundColor = '#a0c35a';
+                } else if (result[i][j] === 2){
+                    itemSpan.style.backgroundColor = '#b0c4ef';
+                } else {
+                    itemSpan.style.backgroundColor = '#ba81c5';
+                }
+                console.log('SP-EL: '+itemSpan);
+                rowDiv.appendChild(itemSpan);
+            };
+            console.log('ROWDIV-EL: '+rowDiv);
+            resultRow.appendChild(rowDiv);            
+        };
+    })
+    .catch(error => {
+        console.error('Error in result_builder():', error);
+    });
+}
+
+
+
 function handleCheckResponse(data) {
     // Extract result and value from the data
     const { result, value, attempts_left, submitted_words, category } = data;
-    console.log('Attempts Left:', attempts_left);
-
-    // Do something based on the result received from the server
-    console.log('inside handleCheckResponse');
-
     if (result === 'right') {
         // Handle 'right' response
         // Remove the selected words from the game board
         removeSelectedWordsFromBoard();
         // Insert a new solved card with the submitted words
         insertSolvedCard(submitted_words, category, value);
+    } else if (result === 'already_attempted'){
+        customAlert("Attempt Repeated");
+
     } else if (result === 'one-off') {
         // Handle 'one-off' response
         animateShakeX();
@@ -211,22 +259,23 @@ function handleCheckResponse(data) {
         
     } else if (result === 'wrong') {
         // Handle 'wrong' response
-        console.log(result);
-        console.log('Value:', value);
-        console.log('Attempts Left:', attempts_left);
         animateShakeX();
         setTimeout(() => {
             updateMistakesCounter(attempts_left);
         }, 600);
     } else if (result == 'gameover') {
-        console.log(result);
         animateShakeX();
         setTimeout(() => {
-            deselectAll()
+            deselectAll();
             customAlert("Game Over");
             updateMistakesCounter(attempts_left);
-        }, 600);
-        
+        }, 600);    
+    } else if (result == 'game_won') {
+        removeSelectedWordsFromBoard();
+        insertSolvedCard(submitted_words, category, value)
+        setTimeout(() => {
+            showResult();
+        }, 2000);
     }
 }
 
@@ -239,16 +288,17 @@ window.addEventListener('DOMContentLoaded', (event) => {
     let shuffleButton = document.getElementById('shuffle');
 
     fetch('/reset-attempts', {
-        method: 'POST'
+        method: 'GET'
     });
+
     let attempts_left = 4;
     console.log(attempts_left)
     updateMistakesCounter(attempts_left)
 
     window.addEventListener('load', function() {
-        // Send an HTTP POST request to the Flask backend
+        // Send an HTTP GET request to the Flask backend
         fetch('/reset-attempts', {
-            method: 'POST'
+            method: 'GET'
         });
     });
 
@@ -282,12 +332,13 @@ window.addEventListener('DOMContentLoaded', (event) => {
         let gameCardsArray = Array.from(gameCards);
         let showHelpBtn = document.getElementById('showHelpBtn');
         let hideHelpBtn = document.getElementById('hideHelpBtn');
+        let backPuzzleBtn = document.getElementById('backPuzzleBtn');
         activeGameCards.forEach(card => {
             selectedWords.push(card.textContent.trim());
             card.classList.remove('active');
         });
-        console.log('Selected Words')
-        console.log(selectedWords)
+        console.log('Selected Words');
+        console.log(selectedWords);
 
         // Shuffle the cards       
         shuffle(gameCardsArray);    
@@ -313,15 +364,33 @@ window.addEventListener('DOMContentLoaded', (event) => {
         console.log('Hide help button clicked')
         let helpSection = document.getElementById('help');
         let fieldSection = document.getElementById('field');
+        let mistakesSection = document.getElementById('mistakes');
+        let gameControlsSection = document.getElementById('gameControls');
+
         helpSection.style.display = 'none';
         fieldSection.style.display = 'flex';
+        mistakesSection.style.display = 'flex';
+        gameControlsSection.style.display = 'flex';
     });
 
     showHelpBtn.addEventListener( 'click', function() {
         console.log('Show help button clicked')
         let helpSection = document.getElementById('help');
         let fieldSection = document.getElementById('field');
+        let mistakesSection = document.getElementById('mistakes');
+        let gameControlsSection = document.getElementById('gameControls');
+
         helpSection.style.display = 'block';
         fieldSection.style.display = 'none';
+        mistakesSection.style.display = 'none';
+        gameControlsSection.style.display = 'none';
     });
+
+    backPuzzleBtn.addEventListener('click', function() {
+        let fieldSection = document.getElementById('field');
+        let resultSection = document.getElementById('result');
+        resultSection.style.display = 'none';
+        fieldSection.style.display = 'flex';
+    });
+
 });

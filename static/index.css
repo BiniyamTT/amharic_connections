@@ -6,6 +6,18 @@
     background-color: #e2e8f0;
 }
 
+.logo{
+    height: 1.5rem;
+    width: 1.5rem;
+}
+.landing{
+    height: 100vh;
+}
+
+.logoContainer img{
+    height:3rem;
+    width: 3rem;
+}
 .abyssinica-sil-regular {
     font-family: "Abyssinica SIL", serif;
     font-weight: 400;
@@ -65,6 +77,13 @@ hr{
     border-radius: 3px;
 }
 
+.resultColor{
+    display:inline-block;
+    width: 40px;
+    height: 40px;
+    border-radius: 5px;
+}
+
 .helpClose{
     display: block;
     cursor: pointer;
@@ -117,6 +136,11 @@ hr{
 
 
 @media (max-width: 640px) {  
+
+    .logo{
+        height: 1.25rem;
+        width: 1.25rem;
+    }
     .container{
         justify-content: space-between;
         align-items: center;
@@ -157,6 +181,14 @@ hr{
         text-align: center;
         align-content: center;
     }
+
+    .resultColor{
+        display:inline-block;
+        width: 33px;
+        height: 33px;
+        border-radius: 5px;
+    }
+
     .gameControl {
         border-radius: 9999px;
         padding-left: 1.5rem;
@@ -194,9 +226,6 @@ hr{
         padding-bottom: 0.75rem;
         font-size: 1rem;
         line-height: 1rem;
-        outline-style: solid;
-        outline-width: 1px;
-        outline-offset: 0px;
         background-color: black;
         color: white;
      
