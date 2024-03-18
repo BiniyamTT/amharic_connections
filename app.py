@@ -69,6 +69,14 @@ def index():
 @app.route("/check", methods=['POST'])
 def check():
     global attempts_left  # Declare attempts_left as global variable
+    global attempts
+    global rights
+
+    # Initialize attempts_left if it's not already initialized
+    if 'attempts_left' not in globals():
+        MAX_ATTEMPTS = 4
+        attempts_left = MAX_ATTEMPTS
+
     print('inside check')
     print(attempts_left)
     # Receive the set of four words submitted from the frontend
@@ -77,7 +85,6 @@ def check():
     # Extract the values and categories of the submitted words
     print(submitted_words)
     submitted_values = []
-    global attempts
     category = []
     
     for attempt in attempts:
@@ -96,7 +103,6 @@ def check():
     if len(set(submitted_values)) == 1:
         value = submitted_values[0]  # Get the common value
         category = category[0].upper()  # Get the common value
-        global rights
         rights += 1
         if rights != 4 :
             return jsonify({'result': 'right', 'value': value, 'attempts_left': attempts_left, 'submitted_words': submitted_words, 'category':category})
