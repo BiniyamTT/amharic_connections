@@ -1,3 +1,11 @@
+// Define global DOM objects
+let gameBoard;
+let gameCards;
+let deselectAllBtn;
+let submitBtn;
+let shuffleBtn;
+let mistakeCounter;
+
 function customAlert(message) {
     var alertDiv = document.getElementById('customAlert');
     alertDiv.innerText = message;
@@ -7,113 +15,164 @@ function customAlert(message) {
     }, 1500); // Display for 1.5 second
 }
 
-function updateDeselectButton() {
-    let activeGameCardsCount = document.querySelectorAll('.gamecard.active').length;
-    let deselectButton = document.getElementById('deselect');
-    if (activeGameCardsCount > 0) {
-        deselectButton.removeAttribute('disabled');
-    } else {
-        deselectButton.setAttribute('disabled', 'disabled');
-    }
-}
+function getActiveCardsCount(){
+    return (document.querySelectorAll('.gamecard.active').length);
+};
 
-function updateSubmitButton() {
-    let activeGameCardsCount = document.querySelectorAll('.gamecard.active').length;
-    let submitButton = document.getElementById('submit');
-    if (activeGameCardsCount === 4) {
-        submitButton.removeAttribute('disabled');
-        submitButton.classList.add('submitbtn');
-    } else {
-        submitButton.classList.remove('submitbtn');
-        submitButton.setAttribute('disabled', 'disabled');
-        
-    }
-}
+function getActiveGameCards(){
+    return (document.querySelectorAll('.gamecard.active'));
+};
 
-function shuffle(array) {
-    console.log('inside shuffle function');
-    console.log(array);
+function getGameCards(){
+    return (document.querySelectorAll('.gamecard'));
+};
+
+async function attempts_left(){
+    try {
+        const response = await fetch('/get_attempts_left', {
+            method: 'GET'
+        });
+        const data = await response.json();
+        console.log(data);
+        return (data.attempts_left);
+    } catch (error) {
+        console.error('Error fetching attempts left:', error);
+    }
+};
+
+function toggleDeselectAllBtn(){
+    if (getActiveCardsCount() > 0){
+        deselectAllBtn.removeAttribute('disabled');
+    }
+    else{
+        deselectAllBtn.setAttribute('disabled','disabled');
+    }
+};
+
+function toggleSubmitBtn(){
+    if (getActiveCardsCount() === 4) {
+        submitBtn.removeAttribute('disabled');
+        submitBtn.classList.add('submitbtn');
+    } else {
+        submitBtn.classList.remove('submitbtn');
+        submitBtn.setAttribute('disabled', 'disabled');
+    }
+};
+
+function updateMistakesCounter(){
+    attempts_left().then(attemptsLeft => {
+      if (attemptsLeft) {
+        // Clear existing circles and add four new ones in one go
+        mistakeCounter.innerHTML = '';
+        for (let i = 0; i < attemptsLeft; i++) {
+          mistakeCounter.innerHTML += '<i class="misscircle fa-solid fa-circle"></i>';
+        }
+      } else {
+        // Remove last circle with animation (assuming only one gets removed at a time)
+        const lastCircle = mistakeCounter.lastElementChild;
+        if (lastCircle) { // Check if lastElementChild exists before animation
+          lastCircle.animate([{ opacity: 1 }, { opacity: 0 }], {
+            duration: 500,
+            easing: 'ease-out'
+          }).onfinish = () => mistakeCounter.removeChild(lastCircle);
+        }
+      }
+    });
+};
+
+function deselectAll(){
+    getActiveGameCards().forEach(element => {
+        element.classList.remove('active');
+    });
+    toggleDeselectAllBtn();
+    toggleSubmitBtn();
+};
+
+function shuffle(array){
+    // Save active card words in a list (a), remove active class.
+    let a = [];
+    let gameCards = getGameCards();
+    getActiveGameCards().forEach(card => {
+        a.push(card.textContent.trim());
+        card.classList.remove('active');
+    });
+    // Fisher-Yates Shuffle (Pick random and swap indices)
     for (let i = array.length - 1; i > 0; i--) {
         const j = Math.floor(Math.random() * (i + 1));
         [array[i].innerHTML, array[j].innerHTML] = [array[j].innerHTML, array[i].innerHTML];
     }
-    return array;
-}
-
-function deselectAll() {
-    let deselectButton = document.getElementById('deselect');
-    let activeGameCards = document.querySelectorAll('.gamecard.active');
-    for (let i = 0; i < activeGameCards.length; i++) {
-        activeGameCards[i].classList.remove('active');
-    }
-    updateDeselectButton();
-    updateSubmitButton();
-}
-
-// Function to update the mistakes counter
-function updateMistakesCounter(attempts_left) {
-    const mistakeCounter = document.getElementById('mistakeCounter');
-
-    // Clear existing circles only if attempts_left is 4 (initial setup)
-    if (attempts_left === 4) {
-        mistakeCounter.innerHTML = '';
-
-        // Add four circles initially
-        for (let i = 0; i < 4; i++) {
-            const circlei = document.createElement('i');
-            circlei.classList.add('misscircle','fa-solid', 'fa-circle');
-            mistakeCounter.appendChild(circlei);
+    // Reapply active class to selected words after shuffling
+    for (let i = 0; i < gameCards.length; i++) {
+        if (a.includes(gameCards[i].textContent.trim())) {
+            gameCards[i].classList.add('active');
         }
-    } else {
-        // If attempts_left is not 4, remove the last circle with animation
-        const lastCircle = mistakeCounter.lastChild;
-        lastCircle.style.animation = 'zoomOut 0.5s forwards'; // Apply the animation
-        setTimeout(() => {
-            mistakeCounter.removeChild(lastCircle);
-        }, 500); // Remove the circle after the animation duration (in milliseconds)
     }
-}
+    return array;
+};
 
-function animateShakeX() {
-    console.log('InsideShakeX')
-    let selectedcards = document.querySelectorAll('.gamecard.active');
-    selectedcards.forEach(function(card) {
-        card.classList.add('animate__animated', 'animate__shakeX');
+function animateShakeX(){
+    let a = getActiveGameCards()
+    a.forEach(function(element) {
+        element.classList.add('animate__animated', 'animate__shakeX');
     });
-    selectedcards[0].addEventListener('animationend', () => {
-        selectedcards.forEach(function(card) {
-            card.classList.remove('animate__animated', 'animate__shakeX');
+    a[0].addEventListener('animationend', () => {
+        a.forEach(function(element) {
+            element.classList.remove('animate__animated', 'animate__shakeX');
         });
     });
-}
+};
 
-function animateShakeY() {
-    console.log('InsideShakeY')
-    let selectedcards = document.querySelectorAll('.gamecard.active');
-    selectedcards.forEach(function(card) {
-        card.classList.add('animate__animated', 'animate__shakeY');
+function animateShakeY(){
+    let a = getActiveGameCards()
+    a.forEach(function(element) {
+        element.classList.add('animate__animated', 'animate__shakeY');
     });
-    selectedcards[0].addEventListener('animationend', () => {
-        selectedcards.forEach(function(card) {
-            card.classList.remove('animate__animated', 'animate__shakeY');
+    a[0].addEventListener('animationend', () => {
+        a.forEach(function(element) {
+            element.classList.remove('animate__animated', 'animate__shakeY');
         });
     });
-}
+};
 
-function removeSelectedWordsFromBoard() {
-    // Get the selected words
-    let selectedWords = document.querySelectorAll('.gamecard.active');
+function submitWords(){
+    // Extract the word from each selected card
+    let words = [];
+    getActiveGameCards().forEach(element => {
+        words.push(element.textContent.trim());
+    });
+    // Disable the submit button while the request is being made
+    submitBtn.setAttribute('disabled', 'disabled');
+    // Send an AJAX request to the server
+    fetch('/check', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({ submittedWords: words })
+    })
+    .then(response => response.json())
+    .then(data => {
+        // Handle the response from the server
+        handleCheckResponse(data);
+    })
+    .catch(error => {
+        console.error('Error in app.py:', error);
+    })
+    .finally(() => {
+        deselectAll()
+    });
+};
 
-    // Remove the entire div element for each selected word
-    selectedWords.forEach(word => {
-        word.classList.add('animate__animated', 'animate__fadeOutUp');
+function removeSolvedGameCards(){
+    getActiveGameCards().forEach(element => {
+        element.classList.add('animate__animated', 'animate__fadeOutUp');
         setTimeout(() => {
-            word.remove();
-        }, 600);
+            element.remove();
+        }, 700);
     });
-}
+};
 
-function insertSolvedCard(submittedWords, category, value) {
+function insertSolvedCard(submittedWords, category, value){
     // Create a new div element for the solved card
     let solvedCardDiv = document.createElement('div');
     solvedCardDiv.classList.add('animate__animated','animate__fadeInUp','solvedcard','solvedcardText','col-span-4','abyssinica-sil-regular');
@@ -149,45 +208,51 @@ function insertSolvedCard(submittedWords, category, value) {
     solvedCategory.appendChild(solvedCardDiv);
 }
 
+function handleCheckResponse(data){
+    // Extract result and value from the data
+    const { result, value, attempts_left, submitted_words, category } = data;
+    if (result === 'right') {
+        removeSolvedGameCards();
+        setTimeout(() => {
+            insertSolvedCard(submitted_words, category, value);
+        },200);
+        
+    } else if (result === 'attempt_made'){
+        customAlert("Attempt Repeated");
 
+    } else if (result === 'one-off') {
+        animateShakeX();
+        setTimeout(() => {
+            customAlert("One Away...");
+            updateMistakesCounter(attempts_left);
+        }, 600);
+        
+    } else if (result === 'wrong') {
+        // Handle 'wrong' response
+        animateShakeX();
+        setTimeout(() => {
+            updateMistakesCounter(attempts_left);
+        }, 600);
+    } else if (result == 'gameover') {
+        animateShakeX();
+        setTimeout(() => {
+            deselectAll();
+            customAlert("Game Over");
+            updateMistakesCounter(attempts_left);
+        }, 600);    
+    } else if (result == 'game_won') {
+        removeSolvedGameCards();
+        setTimeout(() => {
+            insertSolvedCard(submitted_words, category, value);
+            setTimeout(() => {
+                showResult();
+            }, 2000);
+        },200);
+        
+    }
+};
 
-function submitWords() {
-    // Get the selected words
-    let selectedWords = document.querySelectorAll('.gamecard.active');
-
-    // Extract the word and value for each selected word
-    let submittedWords = [];
-    selectedWords.forEach(word => {
-        submittedWords.push(word.textContent.trim());
-    });
-    console.log(submittedWords)
-    // Disable the submit button while the request is being made
-    document.getElementById('submit').setAttribute('disabled', 'disabled');
-
-    // Send an AJAX request to the server
-    fetch('/check', {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/json'
-        },
-        body: JSON.stringify({ submittedWords: submittedWords })
-    })
-    .then(response => response.json())
-    .then(data => {
-        // Handle the response from the server
-        handleCheckResponse(data);
-    })
-    .catch(error => {
-        console.error('Error in app.py:', error);
-    })
-    .finally(() => {
-        // Re-enable the submit button after the request is complete
-        //document.getElementById('submit').removeAttribute('disabled');
-        deselectAll()
-    });
-}
-
-function showResult() {
+function showResult(){
     let fieldSection = document.getElementById('field');
     let resultSection = document.getElementById('result');
     let resultRow = document.getElementById('resultRows');
@@ -233,136 +298,72 @@ function showResult() {
     .catch(error => {
         console.error('Error in result_builder():', error);
     });
-}
+};
 
-
-
-function handleCheckResponse(data) {
-    // Extract result and value from the data
-    const { result, value, attempts_left, submitted_words, category } = data;
-    if (result === 'right') {
-        // Handle 'right' response
-        // Remove the selected words from the game board
-        removeSelectedWordsFromBoard();
-        // Insert a new solved card with the submitted words
-        insertSolvedCard(submitted_words, category, value);
-    } else if (result === 'already_attempted'){
-        customAlert("Attempt Repeated");
-
-    } else if (result === 'one-off') {
-        // Handle 'one-off' response
-        animateShakeX();
-        setTimeout(() => {
-            customAlert("One Off");
-            updateMistakesCounter(attempts_left);
-        }, 600);
-        
-    } else if (result === 'wrong') {
-        // Handle 'wrong' response
-        animateShakeX();
-        setTimeout(() => {
-            updateMistakesCounter(attempts_left);
-        }, 600);
-    } else if (result == 'gameover') {
-        animateShakeX();
-        setTimeout(() => {
-            deselectAll();
-            customAlert("Game Over");
-            updateMistakesCounter(attempts_left);
-        }, 600);    
-    } else if (result == 'game_won') {
-        removeSelectedWordsFromBoard();
-        insertSolvedCard(submitted_words, category, value)
-        setTimeout(() => {
-            showResult();
-        }, 2000);
-    }
-}
-
-
+  
 window.addEventListener('DOMContentLoaded', (event) => {
     console.log('DOM fully loaded and parsed');
-    let gameCards = document.getElementsByClassName('gamecard');
-    let deselectButton = document.getElementById('deselect');
-    let submitButton = document.getElementById('submit');
-    let shuffleButton = document.getElementById('shuffle');
 
-    let attempts_left = 4;
-    console.log(attempts_left)
-    updateMistakesCounter(attempts_left)
+    // Assign variables after the DOM has fully loaded
+    gameBoard = document.getElementById('gameBoard');
+    deselectAllBtn = document.getElementById('deselect');
+    submitBtn = document.getElementById('submit');
+    shuffleBtn = document.getElementById('shuffle');
+    mistakeCounter = document.getElementById('mistakeCounter');
 
-    window.addEventListener('load', function() {
-        // Send an HTTP GET request to the Flask backend
-        fetch('/reset-attempts', {
-            method: 'GET'
-        });
-    });
+    //Declare and define locally used variables
+    let showHelpBtn; 
+    let hideHelpBtn;
+    let backPuzzleBtn;
+    let helpSection;
+    let fieldSection;
+    let resultSection;
+    let mistakesSection;
+    let gameControlsSection;
 
-    //Selection of cards - Toggle on and off
-    if (gameCards.length > 0) {
-        for (let i = 0; i < gameCards.length; i++) {
-            gameCards[i].addEventListener('click', function() {
-                let activeGameCardsCount = document.querySelectorAll('.gamecard.active').length;
-                if (activeGameCardsCount < 4 || this.classList.contains('active')) {
-                    this.classList.toggle('active');
-                    updateDeselectButton(); 
-                    updateSubmitButton(); // Since the deselect button must become active depending on selection of game cards
-                }                        
-            });
-        }
-    }
+    showHelpBtn = document.getElementById('showHelpBtn');
+    hideHelpBtn = document.getElementById('hideHelpBtn');
+    backPuzzleBtn = document.getElementById('backPuzzleBtn');
+    helpSection = document.getElementById('help');
+    fieldSection = document.getElementById('field');
+    resultSection = document.getElementById('result');
+    mistakesSection = document.getElementById('mistakes');
+    gameControlsSection = document.getElementById('gameControls');
     
-    //Deselect button function when clicked
-    deselectButton.addEventListener('click', function() {
-        deselectAll()
-        updateDeselectButton();
-        updateSubmitButton();
-    });
+    
+    
+    //Populate the mistake counter
+    updateMistakesCounter();
 
-    // Shuffle button function when clicked
-    shuffleButton.addEventListener('click', function() {
-        // Get text content of selected words and remove active class
-        let selectedWords = [];
-        let activeGameCards = document.querySelectorAll('.gamecard.active');
-        let gameCards = document.getElementsByClassName('gamecard');
-        let gameCardsArray = Array.from(gameCards);
-        let showHelpBtn = document.getElementById('showHelpBtn');
-        let hideHelpBtn = document.getElementById('hideHelpBtn');
-        let backPuzzleBtn = document.getElementById('backPuzzleBtn');
-        activeGameCards.forEach(card => {
-            selectedWords.push(card.textContent.trim());
-            card.classList.remove('active');
-        });
-        console.log('Selected Words');
-        console.log(selectedWords);
 
-        // Shuffle the cards       
-        shuffle(gameCardsArray);    
-
-        // Reapply active class to selected words after shuffling
-        for (let i = 0; i < gameCards.length; i++) {
-            if (selectedWords.includes(gameCards[i].textContent.trim())) {
-                gameCards[i].classList.add('active');
+    //Selection of cards when clicked - Toggle on and off
+    gameBoard.addEventListener('click', function(event) {
+        if (event.target.classList.contains('gamecard')) {
+            if (getActiveCardsCount() < 4 || event.target.classList.contains('active')) {
+                event.target.classList.toggle('active');
+                toggleDeselectAllBtn();
+                toggleSubmitBtn();
             }
         }
-        // Update button states
-        updateDeselectButton();
-        updateSubmitButton();
     });
 
-    // Add an event listener to the submit button
-    submitButton.addEventListener('click', function() {
+    //Shuffle cards when button is clicked
+    shuffleBtn.addEventListener('click', function(){
+        console.log('Shuffle Clicked');
+        shuffle(getGameCards());
+    });
+
+    //Deselect All cards when button is clicked
+    deselectAllBtn.addEventListener('click', function() {
+        deselectAll();
+    });
+
+    submitBtn.addEventListener('click', function() {
         animateShakeY();
-        setTimeout(submitWords, 1000);
+        setTimeout(submitWords, 600);
     });
 
     hideHelpBtn.addEventListener( 'click', function() {
-        console.log('Hide help button clicked')
-        let helpSection = document.getElementById('help');
-        let fieldSection = document.getElementById('field');
-        let mistakesSection = document.getElementById('mistakes');
-        let gameControlsSection = document.getElementById('gameControls');
-
         helpSection.style.display = 'none';
         fieldSection.style.display = 'flex';
         mistakesSection.style.display = 'flex';
@@ -370,12 +371,6 @@ window.addEventListener('DOMContentLoaded', (event) => {
     });
 
     showHelpBtn.addEventListener( 'click', function() {
-        console.log('Show help button clicked')
-        let helpSection = document.getElementById('help');
-        let fieldSection = document.getElementById('field');
-        let mistakesSection = document.getElementById('mistakes');
-        let gameControlsSection = document.getElementById('gameControls');
-
         helpSection.style.display = 'block';
         fieldSection.style.display = 'none';
         mistakesSection.style.display = 'none';
@@ -383,8 +378,6 @@ window.addEventListener('DOMContentLoaded', (event) => {
     });
 
     backPuzzleBtn.addEventListener('click', function() {
-        let fieldSection = document.getElementById('field');
-        let resultSection = document.getElementById('result');
         resultSection.style.display = 'none';
         fieldSection.style.display = 'flex';
     });
