@@ -287,10 +287,6 @@ window.addEventListener('DOMContentLoaded', (event) => {
     let submitButton = document.getElementById('submit');
     let shuffleButton = document.getElementById('shuffle');
 
-    fetch('/reset-attempts', {
-        method: 'GET'
-    });
-
     let attempts_left = 4;
     console.log(attempts_left)
     updateMistakesCounter(attempts_left)

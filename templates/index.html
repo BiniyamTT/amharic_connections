@@ -47,7 +47,7 @@
 
     <hr>        
 
-    <section id="instruction"> 
+    <section id="instruction" style="display: block;"> 
       <div class="flex justify-center items-center mx-auto py-4 px-12 md:px-14 lg:px-24 w-full">
         <div class="datecontainer">Create four groups of four!</div>
       </div>
@@ -113,7 +113,7 @@
 
     <section id="field" style="display:none;">
       <div class="grid justify-center mx-auto pb-4 sm:px-4 md:px-14 lg:px-24 w-full">
-        <div class="gameboard grid grid-cols-4 gap-4">
+        <div id="gameBoard" class="grid grid-cols-4 gap-4">
           <!-- Content here
            
           <div class="solvedcard col-span-4" style="background-color: #f9df6d;"> 1</div>-->
@@ -143,7 +143,6 @@
         <button disabled class="gameControl" id="deselect">Deselect all</button>
         <button disabled class="gameControl" id="submit" >Submit</button>
       </section>
-
-  </body>
-  <script src = "{{ url_for ('static', filename='script.js' )}}"></script>
+    </body>
+    <script src = "{{ url_for ('static', filename='scriptv2.js' )}}"></script>
 </html>
