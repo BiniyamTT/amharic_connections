@@ -95,7 +95,7 @@
           <button id="backPuzzleBtn"><i class="fa-solid fa-xmark"></i>
           </button>
         </div>
-        <p class="text-[1.5rem] text-center font-bold mt-6">Perfect!</p>
+        <p id="endMessage" class="text-[1.5rem] text-center font-bold mt-6"></p>
         <p class="text-[0.9rem] text-center mt-4">Connections #4</p>
         <div class="flex justify-center mt-3">
           <div id="resultRows" >
@@ -103,7 +103,7 @@
           </div>
         </div>
         <div class="flex justify-center">
-          <a href="#"><button class="submitbtn mt-8" type="submit">Share Your Results</button></a>
+          <a href="#"><button class="submitbtn mt-8 mb-8" type="submit">Share Your Results</button></a>
         </div>
       </div>
   </div>
@@ -139,9 +139,11 @@
 
     <section id="gameControls" style="display:none;">
       <div class="flex justify-center items-center space-x-2 mx-auto py-4 px-4 md:px-14 lg:px-24 w-full">
-        <button class="gameControl" id="shuffle">Shuffle</button>
-        <button disabled class="gameControl" id="deselect">Deselect all</button>
-        <button disabled class="gameControl" id="submit" >Submit</button>
+        <button id="shuffle" class="gameControl" style="display: block;">Shuffle</button>
+        <button id="deselect"  class="gameControl" disabled style="display: block;" >Deselect all</button>
+        <button id="submit"  class="gameControl" disabled style="display: block;">Submit</button>
+        <button id="viewResult" class="gameControl" style="display: none;">View Result</button>
+      </div>
       </section>
     </body>
     <script src = "{{ url_for ('static', filename='script.js' )}}"></script>

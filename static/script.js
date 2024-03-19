@@ -5,6 +5,7 @@ let deselectAllBtn;
 let submitBtn;
 let shuffleBtn;
 let mistakeCounter;
+let viewResultBtn;
 
 function customAlert(message) {
     var alertDiv = document.getElementById('customAlert');
@@ -252,27 +253,37 @@ function handleCheckResponse(data){
     }
 };
 
+function setupResult(message){
+    let endMessage = document.getElementById('endMessage');
+    
+    endMessage.textContent = message;
+    shuffleBtn.style.display ='none';
+    deselectAllBtn.style.display = 'none';
+    submitBtn.style.display = 'none';
+    viewResultBtn.style.display = 'none'
+
+
+}
+
 function showResult(){
     let fieldSection = document.getElementById('field');
     let resultSection = document.getElementById('result');
     let resultRow = document.getElementById('resultRows');
     let mistakesSection = document.getElementById('mistakes');
-    let gameControlsSection = document.getElementById('gameControls');
 
     resultSection.style.display = 'block';
     fieldSection.style.display = 'none';
     mistakesSection.style.display = 'none';
-    gameControlsSection.style.display = 'none';
+
     fetch('/resultbuilder', {
         method: 'GET'
     })
     .then(response => response.json())
     .then(data => {
         // Handle the response from the server
-        console.log(data)
         const {message, result} = data;
-        console.log(message)
-        console.log(result)
+        setupResult(message);
+        resultRow.innerHTML = '';
         for(var i = 0; i<result.length; i++){
             let rowDiv = document.createElement('div');
             rowDiv.classList.add('rowno1') 
@@ -294,6 +305,7 @@ function showResult(){
             console.log('ROWDIV-EL: '+rowDiv);
             resultRow.appendChild(rowDiv);            
         };
+
     })
     .catch(error => {
         console.error('Error in result_builder():', error);
@@ -329,7 +341,8 @@ window.addEventListener('DOMContentLoaded', (event) => {
     resultSection = document.getElementById('result');
     mistakesSection = document.getElementById('mistakes');
     gameControlsSection = document.getElementById('gameControls');
-    
+    viewResultBtn = document.getElementById('viewResult');
+
     
     
     //Populate the mistake counter
@@ -380,6 +393,12 @@ window.addEventListener('DOMContentLoaded', (event) => {
     backPuzzleBtn.addEventListener('click', function() {
         resultSection.style.display = 'none';
         fieldSection.style.display = 'flex';
+        viewResultBtn.style.display = 'block';
+    });
+
+    viewResultBtn.addEventListener('click', function() {
+        showResult();
     });
 
 });
+

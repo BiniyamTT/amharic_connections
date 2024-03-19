@@ -168,7 +168,7 @@ def result_builder():
     result_rows =[]
     row=[]
     if len(ATTEMPTS_MADE) == 4:
-        message = 'Pefect!'
+        message = 'Perfect!'
     elif len(ATTEMPTS_MADE) == 5:
         message = 'Great!'
     elif len(ATTEMPTS_MADE) == 6:
