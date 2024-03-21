@@ -10,6 +10,6 @@ cp -r static/ ~/amharic_connections/
 cp -r templates/ ~/amharic_connections/
 cd ~/amharic_connections/
 source venv/bin/activate
-systemctl restart nginx
-supervisorctl reload
-deactivate
+sudo systemctl restart nginx
+sudo supervisorctl reload
+

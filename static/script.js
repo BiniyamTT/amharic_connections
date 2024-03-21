@@ -62,24 +62,24 @@ function toggleSubmitBtn(){
 };
 
 function updateMistakesCounter(){
-    attempts_left().then(attemptsLeft => {
-      if (attemptsLeft) {
-        // Clear existing circles and add four new ones in one go
-        mistakeCounter.innerHTML = '';
-        for (let i = 0; i < attemptsLeft; i++) {
-          mistakeCounter.innerHTML += '<i class="misscircle fa-solid fa-circle"></i>';
-        }
-      } else {
-        // Remove last circle with animation (assuming only one gets removed at a time)
-        const lastCircle = mistakeCounter.lastElementChild;
-        if (lastCircle) { // Check if lastElementChild exists before animation
-          lastCircle.animate([{ opacity: 1 }, { opacity: 0 }], {
-            duration: 500,
-            easing: 'ease-out'
-          }).onfinish = () => mistakeCounter.removeChild(lastCircle);
-        }
-      }
-    });
+    let a = attempts_left();
+    if (a) {
+    // Clear existing circles and add four new ones in one go
+    mistakeCounter.innerHTML = '';
+    for (let i = 0; i < a; i++) {
+        mistakeCounter.innerHTML += '<i class="misscircle fa-solid fa-circle"></i>';
+    }
+    } else {
+    // Remove last circle with animation (assuming only one gets removed at a time)
+    const lastCircle = mistakeCounter.lastElementChild;
+    if (lastCircle) { // Check if lastElementChild exists before animation
+        lastCircle.animate([{ opacity: 1 }, { opacity: 0 }], {
+        duration: 500,
+        easing: 'ease-out'
+        }).onfinish = () => mistakeCounter.removeChild(lastCircle);
+    }
+    }
+
 };
 
 function deselectAll(){
