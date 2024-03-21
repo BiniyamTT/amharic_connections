@@ -28,17 +28,18 @@ function getGameCards(){
     return (document.querySelectorAll('.gamecard'));
 };
 
-async function attempts_left(){
-    try {
-        const response = await fetch('/get_attempts_left', {
-            method: 'GET'
-        });
-        const data = await response.json();
+function attempts_left(){
+    fetch('/get_attempts_left', {
+        method: 'GET'
+    })
+    .then( response => response.json())
+    .then( data => {
         console.log(data);
         return (data.attempts_left);
-    } catch (error) {
+    })
+    .catch (error => {
         console.error('Error fetching attempts left:', error);
-    }
+    })
 };
 
 function toggleDeselectAllBtn(){
