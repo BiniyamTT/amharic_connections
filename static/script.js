@@ -28,19 +28,19 @@ function getGameCards(){
     return (document.querySelectorAll('.gamecard'));
 };
 
-function attempts_left(){
-    fetch('/get_attempts_left', {
-        method: 'GET'
+function attempts_left() {
+    return fetch('/get_attempts_left', {
+      method: 'GET'
     })
-    .then( response => response.json())
-    .then( data => {
-        console.log(data);
-        return (data.attempts_left);
+    .then(response => response.json())
+    .then(data => {
+      console.log(data.attempts_left);
+      return data.attempts_left;
     })
-    .catch (error => {
-        console.error('Error fetching attempts left:', error);
-    })
-};
+    .catch(error => {
+      console.error('Error fetching attempts left:', error);
+    });
+  }
 
 function toggleDeselectAllBtn(){
     if (getActiveCardsCount() > 0){
@@ -61,26 +61,33 @@ function toggleSubmitBtn(){
     }
 };
 
-function updateMistakesCounter(){
-    let a = attempts_left();
-    if (a) {
-    // Clear existing circles and add four new ones in one go
-    mistakeCounter.innerHTML = '';
-    for (let i = 0; i < a; i++) {
-        mistakeCounter.innerHTML += '<i class="misscircle fa-solid fa-circle"></i>';
-    }
-    } else {
-    // Remove last circle with animation (assuming only one gets removed at a time)
-    const lastCircle = mistakeCounter.lastElementChild;
-    if (lastCircle) { // Check if lastElementChild exists before animation
-        lastCircle.animate([{ opacity: 1 }, { opacity: 0 }], {
-        duration: 500,
-        easing: 'ease-out'
-        }).onfinish = () => mistakeCounter.removeChild(lastCircle);
-    }
-    }
-
-};
+function updateMistakesCounter() {
+    attempts_left()
+    .then(attemptsLeft => {
+      console.log('From UMC Function'); 
+      console.log(attemptsLeft); 
+  
+      if (attemptsLeft) {
+        // Clear existing circles and add new ones
+        mistakeCounter.innerHTML = '';
+        for (let i = 0; i < attemptsLeft; i++) {
+          mistakeCounter.innerHTML += '<i class="misscircle fa-solid fa-circle"></i>';
+        }
+      } else {
+        // Remove last circle with animation
+        const lastCircle = mistakeCounter.lastElementChild;
+        if (lastCircle) {
+          lastCircle.animate([{ opacity: 1 }, { opacity: 0 }], {
+            duration: 500,
+            easing: 'ease-out'
+          }).onfinish = () => mistakeCounter.removeChild(lastCircle);
+        }
+      }
+    })
+    .catch(error => {
+      console.error('Error fetching attempts left:', error);
+    });
+  }
 
 function deselectAll(){
     getActiveGameCards().forEach(element => {
