@@ -11,5 +11,4 @@ cp -r templates/ ~/amharic_connections/
 cd ~/amharic_connections/
 source venv/bin/activate
 sudo systemctl restart nginx
-sudo supervisorctl reload
 

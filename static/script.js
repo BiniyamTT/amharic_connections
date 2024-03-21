@@ -233,21 +233,21 @@ function handleCheckResponse(data){
         animateShakeX();
         setTimeout(() => {
             customAlert("One Away...");
-            updateMistakesCounter(attempts_left);
+            updateMistakesCounter();
         }, 600);
         
     } else if (result === 'wrong') {
         // Handle 'wrong' response
         animateShakeX();
         setTimeout(() => {
-            updateMistakesCounter(attempts_left);
+            updateMistakesCounter();
         }, 600);
     } else if (result == 'gameover') {
         animateShakeX();
         setTimeout(() => {
             deselectAll();
             customAlert("Game Over");
-            updateMistakesCounter(attempts_left);
+            updateMistakesCounter();
         }, 600);    
     } else if (result == 'game_won') {
         removeSolvedGameCards();

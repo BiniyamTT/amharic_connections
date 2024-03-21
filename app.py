@@ -188,3 +188,7 @@ def result_builder():
     return jsonify({'message': message, 
                     'result':result_rows
                     })
+    
+    
+if __name__ == "__main__":
+    app.run(debug=True)
