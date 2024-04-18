@@ -21,6 +21,18 @@
   </head>
 
   <body class="bg-slate-100 font-libre">
+    {% if showResult %}
+      <script>
+      // Call the showResults() function when the page loads
+      window.onload = function() {
+        getGameCards().forEach(function(card){
+          card.remove();
+        })
+        setupResult();
+        showResult();
+      };
+      </script>
+    {% endif %}
     <header class="py-6">
       <div class="container flex justify-between items-center mx-auto md:px-14 lg:px-24 w-full">
         <div class="flex items-center space-x-2">
@@ -108,17 +120,11 @@
       </div>
   </div>
 </section>
-
-
-
     <section id="field" style="display:none;">
       <div class="grid justify-center mx-auto pb-4 sm:px-4 md:px-14 lg:px-24 w-full">
         <div id="gameBoard" class="grid grid-cols-4 gap-4">
-          <!-- Content here
-           
-          <div class="solvedcard col-span-4" style="background-color: #f9df6d;"> 1</div>-->
           <div class="solvedCategory col-span-4 grid grid-cols-4 gap-4" id="solvedCategory" style="display: none;">
-            <!-- Solved card be dynamically added here -->
+          <!-- Solved card be dynamically added here -->
           </div>
           {% for word in words %}
           <div class="gamecard abyssinica-sil-regular" id="gameCard">{{ word }}</div>

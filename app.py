@@ -1,68 +1,72 @@
+import os
 import random
+import redis
 
-from flask import Flask, render_template, request, jsonify, session
+from flask import Flask, render_template, redirect, request, jsonify, session, url_for
 from flask_session import Session
 from datetime import datetime
 
-from words import words
+from words import words as WORDS
 
 # Create the app instance
 app = Flask(__name__)
 
+# Details on the Secret Key: https://flask.palletsprojects.com/en/3.0.x/config/#SECRET_KEY
+# NOTE: The secret key is used to cryptographically-sign the cookies used for storing
+#       the session identifier.
+app.secret_key = os.getenv('SECRET_KEY', default='BAD_SECRET_KEY')
+
+# Configure Redis for storing the session data on the server-side
+app.config['SESSION_TYPE'] = 'redis'
+app.config['SESSION_PERMANENT'] = False
+app.config['SESSION_USE_SIGNER'] = True
+app.config['SESSION_REDIS'] = redis.from_url('redis://127.0.0.1:6379')
+
 # Ensure templates are auto-reloaded
 app.config["TEMPLATES_AUTO_RELOAD"] = True
 
-# Configure session to use filesystem (instead of signed cookies)
-app.config["SESSION_PERMANENT"] = False
-app.config["SESSION_TYPE"] = "filesystem"
-Session(app)
+# Create and initialize the Flask-Session object AFTER `app` has been configured
+server_session = Session(app)
 
 # Get and format today's date
 date = datetime.today().strftime('%B %d, %Y')
 
-#Define Global Variables
-ATTEMPTS_MADE = []
-ATTEMPTS_CORRECT = 0
-ATTEMPTS_LEFT = 4
-
-
 # Capitalize and Randomize word order
-word_list = [word['word'] for word in words]
+word_list = [word['word'] for word in WORDS]
 random.seed(88)
 random.shuffle(word_list)
 
+def initialize_session():
+    session['ATTEMPTS_MADE'] = []
+    session['ATTEMPTS_CORRECT'] = 0
+    session['CORRECT_VALUES'] = []
+    session['ATTEMPTS_LEFT'] = 4
+
 def get_attempts_left():
-    global ATTEMPTS_LEFT
-    return ATTEMPTS_LEFT
+    return session['ATTEMPTS_LEFT']
 
 def lose_attempt():
-    global ATTEMPTS_LEFT
-    ATTEMPTS_LEFT -= 1
-    return ATTEMPTS_LEFT
+    session['ATTEMPTS_LEFT'] -= 1
+    return session['ATTEMPTS_LEFT']
 
 def is_attempt_repeated(s_words):
-    global ATTEMPTS_MADE
-    for attempt in ATTEMPTS_MADE:
+    for attempt in session['ATTEMPTS_MADE']:
         if set(attempt) == set(s_words):
             return True
     return False
 
-def reset():
-    global ATTEMPTS_LEFT, ATTEMPTS_CORRECT, ATTEMPTS_MADE
-    ATTEMPTS_MADE = []
-    ATTEMPTS_CORRECT = 0
-    ATTEMPTS_LEFT = 4
-
-
 @app.route("/")
 def landing():
-   return render_template("landing.html", date=date)
+    return render_template("landing.html", date=date)
 
 @app.route("/gameplay")
 def index():
-    reset()
+    if 'ATTEMPTS_MADE' not in session:
+        initialize_session()
+        return render_template("index.html", words=word_list, date=date)
+    if (session['ATTEMPTS_CORRECT'] == 4 or session['ATTEMPTS_LEFT']  == 0):
+        return render_template("index.html", words=word_list, date=date, showResult=True)
     return render_template("index.html", words=word_list, date=date)
-
 
 @app.route('/get_attempts_left')
 def get_attempts():
@@ -70,9 +74,8 @@ def get_attempts():
 
 @app.route("/check", methods=['POST'])
 def check():
-    global ATTEMPTS_MADE, ATTEMPTS_CORRECT
-    print (ATTEMPTS_CORRECT)
-    print (ATTEMPTS_MADE)
+    print (session['ATTEMPTS_CORRECT'])
+    print (session['ATTEMPTS_MADE'])
     
     # Receive the set of four words submitted from the frontend
     s_words = None
@@ -91,22 +94,23 @@ def check():
                         })
     else:
         for s_word in s_words:
-            for word in words:
+            for word in WORDS:
                 if s_word == word['word']:
                     s_values.append(word['value'])
                     cat.append(word['category'])
                     break
                 
-        ATTEMPTS_MADE.append(s_words)
-        print (ATTEMPTS_MADE)
+        session['ATTEMPTS_MADE'].append(s_words)
+        print (session['ATTEMPTS_MADE'])
         
         
         # Check if all four words have identical values
         # i.e. CORRECT ATTEMPT 
         if len(set(s_values)) == 1:
             print('CORRECT ATTEMPT')
-            ATTEMPTS_CORRECT = ATTEMPTS_CORRECT + 1
-            if ATTEMPTS_CORRECT != 4 :
+            session['ATTEMPTS_CORRECT'] = session['ATTEMPTS_CORRECT'] + 1
+            if session['ATTEMPTS_CORRECT'] != 4 :
+                session['CORRECT_VALUES'].append(s_values[0])
                 return jsonify({'result': 'right', 
                                 'value': s_values[0], 
                                 'attempts_left': get_attempts_left(), 
@@ -114,6 +118,7 @@ def check():
                                 'category':cat[0]
                                 })
             else:
+                session['CORRECT_VALUES'].append(s_values[0])
                 return jsonify({'result': 'game_won',
                                 'value': s_values[0], 
                                 'attempts_left': get_attempts_left(),
@@ -161,24 +166,63 @@ def check():
                                 'submitted_words': None, 
                                 'category':None})
 
+def get_result_values():
+    print(session['CORRECT_VALUES'])
+    solved_values = []
+    not_solved_values = [0,1,2,3]
+    for value in session['CORRECT_VALUES']:
+        solved_values.append(value)
+        not_solved_values.remove(value)
+    for value in list(not_solved_values):
+        solved_values.append(value)
+    print('result values:')
+    print(solved_values)  
+        
+    return(solved_values)
+    
+
+
+@app.route('/solvegame')
+def solve_game():
+    print('inside solve game function')
+    results = []
+    result_values = get_result_values()      
+    
+    for value in result_values:
+        result_dict = {}
+        result_dict['value'] = value
+        category = ''
+        word_list = []
+        for word in WORDS:
+            if word['value'] == value:
+                word_list.append(word['word'])
+                category = word['category']
+        result_dict['word_list'] = word_list
+        result_dict['category'] = category
+        results.append(result_dict)
+    print(results)
+    return jsonify(results)
+
+
 @app.route("/resultbuilder")
 def result_builder():
     print('inside result builder')
-    global ATTEMPTS_MADE
     result_rows =[]
     row=[]
-    if len(ATTEMPTS_MADE) == 4:
+    if len(session['ATTEMPTS_MADE']) == 4 and len(session['CORRECT_VALUES']) == 4:
         message = 'Perfect!'
-    elif len(ATTEMPTS_MADE) == 5:
+    elif len(session['ATTEMPTS_MADE']) == 5 and len(session['CORRECT_VALUES']) == 4:
         message = 'Great!'
-    elif len(ATTEMPTS_MADE) == 6:
+    elif len(session['ATTEMPTS_MADE']) == 6 and len(session['CORRECT_VALUES']) == 4:
         message = 'Solid!'
-    elif len(ATTEMPTS_MADE) == 7:
+    elif len(session['ATTEMPTS_MADE']) == 7 and len(session['CORRECT_VALUES']) == 4:
         message = 'Phew!'
+    else:
+        message = 'Next Time!'
     
-    for attempt in ATTEMPTS_MADE:
+    for attempt in session['ATTEMPTS_MADE']:
         for attempt_word in attempt:
-            for word in words:
+            for word in WORDS:
                 if attempt_word == word['word']:
                     row.append(word['value'])
                     break

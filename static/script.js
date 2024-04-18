@@ -217,6 +217,30 @@ function insertSolvedCard(submittedWords, category, value){
     solvedCategory.appendChild(solvedCardDiv);
 }
 
+function solveGame() {
+    getGameCards().forEach(function(card){
+        card.remove();
+    })
+    
+    let solvedCategory = document.getElementById('solvedCategory');
+    solvedCategory.replaceChildren();
+
+    fetch('/solvegame', {
+        method: 'GET'
+    })
+    .then(response => response.json())
+    .then(data => {
+        console.log(data);
+        for(let i = 0; i < data.length; i++) {
+            insertSolvedCard(data[i]['word_list'], data[i]['category'], data[i]['value']);
+        }
+
+    })
+    .catch(error => {
+        console.error('Error in solveGame():', error);
+    });
+}
+
 function handleCheckResponse(data){
     // Extract result and value from the data
     const { result, value, attempts_left, submitted_words, category } = data;
@@ -246,8 +270,13 @@ function handleCheckResponse(data){
         animateShakeX();
         setTimeout(() => {
             deselectAll();
-            customAlert("Game Over");
             updateMistakesCounter();
+            setupResult('')
+            customAlert("Game Over");
+            solveGame();
+            setTimeout(() => {
+                showResult();
+            }, 2000);
         }, 600);    
     } else if (result == 'game_won') {
         removeSolvedGameCards();
@@ -271,6 +300,23 @@ function setupResult(message){
     viewResultBtn.style.display = 'none'
 
 
+}
+
+function checkShowResult() {
+    console.log('Inside checkshowresult')
+    fetch('/gameplay', {
+        method: 'GET'
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.showResult) {
+            console.log('checkshowresult = true, returning')
+            return true;
+        }
+    })
+    .catch(error => {
+        console.error('Error in index():', error);
+    });
 }
 
 function showResult(){
@@ -323,6 +369,11 @@ function showResult(){
   
 window.addEventListener('DOMContentLoaded', (event) => {
     console.log('DOM fully loaded and parsed');
+    // Check if game is already played
+    if (checkShowResult() === true) {
+        console.log('calling showResult')
+        showResult();
+    }
 
     // Assign variables after the DOM has fully loaded
     gameBoard = document.getElementById('gameBoard');
@@ -401,10 +452,12 @@ window.addEventListener('DOMContentLoaded', (event) => {
     backPuzzleBtn.addEventListener('click', function() {
         resultSection.style.display = 'none';
         fieldSection.style.display = 'flex';
+        solveGame();
         viewResultBtn.style.display = 'block';
     });
 
     viewResultBtn.addEventListener('click', function() {
+        setupResult('')
         showResult();
     });
 

@@ -9,6 +9,5 @@ cp app.py ~/amharic_connections/
 cp -r static/ ~/amharic_connections/
 cp -r templates/ ~/amharic_connections/
 cd ~/amharic_connections/
-source venv/bin/activate
 sudo systemctl restart nginx
 
