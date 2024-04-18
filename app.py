@@ -44,7 +44,10 @@ def initialize_session():
     session['ATTEMPTS_LEFT'] = 4
 
 def get_attempts_left():
-    return session['ATTEMPTS_LEFT']
+    if 'ATTEMPTS_LEFT' in session:
+        return session['ATTEMPTS_LEFT']
+    else:
+        return (4)
 
 def lose_attempt():
     session['ATTEMPTS_LEFT'] -= 1
