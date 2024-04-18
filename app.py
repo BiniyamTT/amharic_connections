@@ -37,6 +37,7 @@ random.seed(88)
 random.shuffle(word_list)
 
 def initialize_session():
+    session['GAME_STATE'] = 0
     session['ATTEMPTS_MADE'] = []
     session['ATTEMPTS_CORRECT'] = 0
     session['CORRECT_VALUES'] = []
@@ -59,13 +60,18 @@ def is_attempt_repeated(s_words):
 def landing():
     return render_template("landing.html", date=date)
 
-@app.route("/gameplay")
-def index():
+@app.route("/checkshowresult")
+def checkshowresult():
     if 'ATTEMPTS_MADE' not in session:
         initialize_session()
-        return render_template("index.html", words=word_list, date=date)
-    if (session['ATTEMPTS_CORRECT'] == 4 or session['ATTEMPTS_LEFT']  == 0):
-        return render_template("index.html", words=word_list, date=date, showResult=True)
+        return jsonify({'checkshowresult':'false'})
+    elif (session['ATTEMPTS_CORRECT'] == 4 or session['ATTEMPTS_LEFT']  == 0):
+        return jsonify({'checkshowresult':'true'})
+    else:
+        return jsonify({'checkshowresult':'false'})
+
+@app.route("/gameplay")
+def index():   
     return render_template("index.html", words=word_list, date=date)
 
 @app.route('/get_attempts_left')

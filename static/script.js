@@ -304,18 +304,21 @@ function setupResult(message){
 
 function checkShowResult() {
     console.log('Inside checkshowresult')
-    fetch('/gameplay', {
+    fetch('/checkshowresult', {
         method: 'GET'
     })
     .then(response => response.json())
     .then(data => {
-        if (data.showResult) {
+        if (data.checkshowresult === 'true') {
             console.log('checkshowresult = true, returning')
             return true;
         }
+        else {
+            return false;
+        }
     })
     .catch(error => {
-        console.error('Error in index():', error);
+        console.error('Error in gameplay():', error);
     });
 }
 
