@@ -40,7 +40,7 @@ function attempts_left() {
     .catch(error => {
       console.error('Error fetching attempts left:', error);
     });
-  }
+};
 
 function toggleDeselectAllBtn(){
     if (getActiveCardsCount() > 0){
@@ -87,7 +87,7 @@ function updateMistakesCounter() {
     .catch(error => {
       console.error('Error fetching attempts left:', error);
     });
-  }
+};
 
 function deselectAll(){
     getActiveGameCards().forEach(element => {
@@ -181,41 +181,58 @@ function removeSolvedGameCards(){
     });
 };
 
+function removeCardsByWord(wordList){
+    getGameCards().forEach(element => {
+        for (let i=0; i<wordList.length; i++){
+            if (element.innerHTML === wordList[i]) {
+                element.remove();
+            }
+        }
+    })
+};
+
 function insertSolvedCard(submittedWords, category, value){
-    // Create a new div element for the solved card
-    let solvedCardDiv = document.createElement('div');
-    solvedCardDiv.classList.add('animate__animated','animate__fadeInUp','solvedcard','solvedcardText','col-span-4','abyssinica-sil-regular');
-    if(value === 0){
-        solvedCardDiv.style.backgroundColor = '#f9df6d';
-    } else if (value === 1){
-        solvedCardDiv.style.backgroundColor = '#a0c35a';
-    } else if (value === 2){
-        solvedCardDiv.style.backgroundColor = '#b0c4ef';
-    }else{
-        solvedCardDiv.style.backgroundColor = '#ba81c5';
+    if (submittedWords.length > 0){
+        try {
+            // Create a new div element for the solved card
+            let solvedCardDiv = document.createElement('div');
+            solvedCardDiv.classList.add('animate__animated','animate__fadeInUp','solvedcard','solvedcardText','col-span-4','abyssinica-sil-regular');
+            if(value === 0){
+                solvedCardDiv.style.backgroundColor = '#f9df6d';
+            } else if (value === 1){
+                solvedCardDiv.style.backgroundColor = '#a0c35a';
+            } else if (value === 2){
+                solvedCardDiv.style.backgroundColor = '#b0c4ef';
+            }else if (value === 3){
+                solvedCardDiv.style.backgroundColor = '#ba81c5';
+            }
+            // Create div elements for category and words
+            let categoryDiv = document.createElement('div');
+            let wordsDiv = document.createElement('div');
+
+            // Set text content for category and words
+            categoryDiv.textContent = category;
+            wordsDiv.textContent = submittedWords.map(word => word).join('፣');
+
+            // Append category and words divs to solved card div
+            solvedCardDiv.appendChild(categoryDiv);
+            solvedCardDiv.appendChild(wordsDiv);
+
+            // Get the solved category element
+            let solvedCategory = document.getElementById('solvedCategory');
+            solvedCategory.style.display = 'grid';
+
+            // Append the solved card to the solved category
+            solvedCategory.appendChild(solvedCardDiv);
+        } 
+        catch(error) {
+            return
+        }
     }
-    
-
-    // Create div elements for category and words
-    let categoryDiv = document.createElement('div');
-    let wordsDiv = document.createElement('div');
-
-
-    // Set text content for category and words
-    categoryDiv.textContent = category;
-    wordsDiv.textContent = submittedWords.map(word => word).join('፣');
-
-    // Append category and words divs to solved card div
-    solvedCardDiv.appendChild(categoryDiv);
-    solvedCardDiv.appendChild(wordsDiv);
-
-    // Get the solved category element
-    let solvedCategory = document.getElementById('solvedCategory');
-    solvedCategory.style.display = 'grid';
-
-    // Append the solved card to the solved category
-    solvedCategory.appendChild(solvedCardDiv);
-}
+    else {
+        return
+    }
+};
 
 function solveGame() {
     getGameCards().forEach(function(card){
@@ -223,7 +240,11 @@ function solveGame() {
     })
     
     let solvedCategory = document.getElementById('solvedCategory');
+    let viewResultBtn = document.getElementById('viewResult');
+    let gameControlsSection = document.getElementById('gameControls');
+
     solvedCategory.replaceChildren();
+    gameControlsSection .style.display = 'block';
 
     fetch('/solvegame', {
         method: 'GET'
@@ -239,7 +260,7 @@ function solveGame() {
     .catch(error => {
         console.error('Error in solveGame():', error);
     });
-}
+};
 
 function handleCheckResponse(data){
     // Extract result and value from the data
@@ -300,26 +321,47 @@ function setupResult(message){
     viewResultBtn.style.display = 'none'
 
 
+};
+
+async function getGameState() {
+    console.log('Getting Game State');
+    try {
+      const response = await fetch('/get_game_state', {
+        method: 'GET'
+      });
+      const data = await response.json();
+      console.log(data.game_state);
+      if (data.game_state === 0) {
+        console.log('Game Over/Won --> Showing Result');
+        return 0;
+      }
+      else if (data.game_state === 1){
+        console.log('Game in progress- loading recent state');
+        return 1;
+      }
+      else{
+        console.log('New Game Starting');
+        return null;
+      }
+    } catch (error) {
+      console.error('Error in get_game_state():', error);
+      return false; // Handle errors gracefully, consider returning a default value
+    }
 }
 
-function checkShowResult() {
-    console.log('Inside checkshowresult')
-    fetch('/checkshowresult', {
+async function getGameData() {
+    console.log('Getting Game State');
+    try {
+      const response = await fetch('/get_game_data', {
         method: 'GET'
-    })
-    .then(response => response.json())
-    .then(data => {
-        if (data.checkshowresult === 'true') {
-            console.log('checkshowresult = true, returning')
-            return true;
-        }
-        else {
-            return false;
-        }
-    })
-    .catch(error => {
-        console.error('Error in gameplay():', error);
-    });
+      });
+      const data = await response.json();
+      console.log(data)
+      return data;
+    } catch (error) {
+    console.error('Error in get_game_data():', error);
+    return false; // Handle errors gracefully, consider returning a default value
+    }
 }
 
 function showResult(){
@@ -327,9 +369,11 @@ function showResult(){
     let resultSection = document.getElementById('result');
     let resultRow = document.getElementById('resultRows');
     let mistakesSection = document.getElementById('mistakes');
+    let helpSection = document.getElementById('help');
 
     resultSection.style.display = 'block';
     fieldSection.style.display = 'none';
+    helpSection.style.display = 'none';
     mistakesSection.style.display = 'none';
 
     fetch('/resultbuilder', {
@@ -370,13 +414,9 @@ function showResult(){
 };
 
   
-window.addEventListener('DOMContentLoaded', (event) => {
+window.addEventListener('DOMContentLoaded', async (event) => {
     console.log('DOM fully loaded and parsed');
-    // Check if game is already played
-    if (checkShowResult() === true) {
-        console.log('calling showResult')
-        showResult();
-    }
+    
 
     // Assign variables after the DOM has fully loaded
     gameBoard = document.getElementById('gameBoard');
@@ -405,12 +445,32 @@ window.addEventListener('DOMContentLoaded', (event) => {
     gameControlsSection = document.getElementById('gameControls');
     viewResultBtn = document.getElementById('viewResult');
 
-    
-    
+    const gameState = await getGameState();
+
+    if (gameState === 0) {
+      console.log('Calling showResult');
+      helpSection.style.display = 'none';
+      showResult();
+    }
+
+    if (gameState === 1) {
+        const gameData = await getGameData();
+        helpSection.style.display = 'none';
+        fieldSection.style.display = 'flex';
+        mistakesSection.style.display = 'flex';
+        gameControlsSection.style.display = 'flex';
+        removeCardsByWord(gameData.removeWords);
+        for (let i = 0; i < gameData.solveFrom.length; i++) {
+            insertSolvedCard(gameData.solveFrom[i].submittedWords,
+                             gameData.solveFrom[i].category,
+                             gameData.solveFrom[i].value
+                            )
+        }
+    } 
     //Populate the mistake counter
     updateMistakesCounter();
 
-
+    
     //Selection of cards when clicked - Toggle on and off
     gameBoard.addEventListener('click', function(event) {
         if (event.target.classList.contains('gamecard')) {
@@ -450,19 +510,20 @@ window.addEventListener('DOMContentLoaded', (event) => {
         fieldSection.style.display = 'none';
         mistakesSection.style.display = 'none';
         gameControlsSection.style.display = 'none';
+        resultSection.style.display = 'none';
     });
 
     backPuzzleBtn.addEventListener('click', function() {
         resultSection.style.display = 'none';
         fieldSection.style.display = 'flex';
-        solveGame();
         viewResultBtn.style.display = 'block';
+        solveGame();
     });
 
     viewResultBtn.addEventListener('click', function() {
         setupResult('')
         showResult();
-    });
+    });   
 
 });
 

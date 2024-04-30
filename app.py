@@ -37,7 +37,7 @@ random.seed(88)
 random.shuffle(word_list)
 
 def initialize_session():
-    session['GAME_STATE'] = 0
+    session['GAME_STATE'] = None
     session['ATTEMPTS_MADE'] = []
     session['ATTEMPTS_CORRECT'] = 0
     session['CORRECT_VALUES'] = []
@@ -59,20 +59,90 @@ def is_attempt_repeated(s_words):
             return True
     return False
 
+def get_words_from_value(values):
+    word_list = []
+    for value in values:
+        for word in WORDS:
+            if word['value'] == value:
+                word_list.append(word['word'])
+    return word_list
+
+def get_solver_data(values):
+    solverdata = []
+    for value in values:
+        valist = [value]
+        data = {}
+        for word in WORDS:
+            if word['value'] == value:
+                category = word['category']               
+            data['category'] = category
+        data['value'] = value
+        data['submittedWords'] = get_words_from_value(valist)
+        solverdata.append(data)
+    print('*****************')
+    print(solverdata)
+    print('*****************')
+    return solverdata
+
+def get_result_values():
+    print(session['CORRECT_VALUES'])
+    solved_values = []
+    not_solved_values = [0,1,2,3]
+    for value in session['CORRECT_VALUES']:
+        solved_values.append(value)
+        not_solved_values.remove(value)
+    for value in list(not_solved_values):
+        solved_values.append(value)
+    print('result values:')
+    print(solved_values)  
+        
+    return(solved_values)
+
+def get_category_from_word(word):
+    for w in WORDS:
+        if w['word'] == word:
+            return w['category']
+
+def get_value_from_word(word):
+    for w in WORDS:
+        if w['word'] == word:
+            return w['value']
+
 @app.route("/")
 def landing():
     return render_template("landing.html", date=date)
 
-@app.route("/checkshowresult")
-def checkshowresult():
+@app.route("/get_game_state")
+def get_game_state():
     if 'ATTEMPTS_MADE' not in session:
         initialize_session()
-        return jsonify({'checkshowresult':'false'})
-    elif (session['ATTEMPTS_CORRECT'] == 4 or session['ATTEMPTS_LEFT']  == 0):
-        return jsonify({'checkshowresult':'true'})
+        print( "Just initialized session:")
+        print(jsonify({'game_state':session['GAME_STATE']}))
+        return jsonify({'game_state':session['GAME_STATE']})
     else:
-        return jsonify({'checkshowresult':'false'})
-
+        if (session['ATTEMPTS_CORRECT'] == 4 or session['ATTEMPTS_LEFT']  == 0):
+            session['GAMESTATE'] = 0
+            return jsonify({'game_state':session['GAME_STATE']})
+        else:
+            
+            session['GAMESTATE'] = 1
+            return jsonify({'game_state':session['GAME_STATE']})
+        
+@app.route("/get_game_data")
+def get_game_data():
+    if len(session['CORRECT_VALUES']) > 0:
+        word_list = get_words_from_value(session['CORRECT_VALUES'])
+        return jsonify({'removeWords': word_list, 
+                        'solveFrom':get_solver_data(session['CORRECT_VALUES'])
+                    })
+    else:
+        return jsonify({'removeWords': [], 
+                        'solveFrom':{'submittedWords': [],
+                                    'category':'',
+                                    'value':''
+                                    }
+                    })
+        
 @app.route("/gameplay")
 def index():   
     return render_template("index.html", words=word_list, date=date)
@@ -110,6 +180,7 @@ def check():
                     break
                 
         session['ATTEMPTS_MADE'].append(s_words)
+        session['GAME_STATE'] = 1
         print (session['ATTEMPTS_MADE'])
         
         
@@ -128,6 +199,7 @@ def check():
                                 })
             else:
                 session['CORRECT_VALUES'].append(s_values[0])
+                session['GAME_STATE'] = 0
                 return jsonify({'result': 'game_won',
                                 'value': s_values[0], 
                                 'attempts_left': get_attempts_left(),
@@ -140,7 +212,9 @@ def check():
         # i.e ONE AWAY ATTEMPT
         elif len(set(s_values)) == 2 and (s_values.count(s_values[0]) == 3 or s_values.count(s_values[1]) == 3):
             if get_attempts_left() == 1:  # Check if it's the last attempt
+                lose_attempt()
                 print('GAMEOVER')
+                session['GAME_STATE'] = 0
                 return jsonify({'result': 'gameover',
                                 'value': None, 
                                 'attempts_left': 0,
@@ -160,7 +234,9 @@ def check():
         # i.e INCORRECT ATTEMPT
         else:
             if get_attempts_left() == 1:  # Check if it's the last attempt
+                lose_attempt()
                 print('GAMEOVER')
+                session['GAME_STATE'] = 0
                 return jsonify({'result': 'gameover',
                                 'value': None, 
                                 'attempts_left': 0,
@@ -174,22 +250,6 @@ def check():
                                 'attempts_left': get_attempts_left(),
                                 'submitted_words': None, 
                                 'category':None})
-
-def get_result_values():
-    print(session['CORRECT_VALUES'])
-    solved_values = []
-    not_solved_values = [0,1,2,3]
-    for value in session['CORRECT_VALUES']:
-        solved_values.append(value)
-        not_solved_values.remove(value)
-    for value in list(not_solved_values):
-        solved_values.append(value)
-    print('result values:')
-    print(solved_values)  
-        
-    return(solved_values)
-    
-
 
 @app.route('/solvegame')
 def solve_game():
@@ -211,7 +271,6 @@ def solve_game():
         results.append(result_dict)
     print(results)
     return jsonify(results)
-
 
 @app.route("/resultbuilder")
 def result_builder():
@@ -241,7 +300,6 @@ def result_builder():
     return jsonify({'message': message, 
                     'result':result_rows
                     })
-    
     
 if __name__ == "__main__":
     app.run(debug=True)
