@@ -28,9 +28,6 @@ app.config["TEMPLATES_AUTO_RELOAD"] = True
 # Create and initialize the Flask-Session object AFTER `app` has been configured
 server_session = Session(app)
 
-# Get and format today's date
-date = datetime.today().strftime('%B %d, %Y')
-
 # Capitalize and Randomize word order
 word_list = [word['word'] for word in WORDS]
 random.seed(88)
@@ -110,6 +107,8 @@ def get_value_from_word(word):
 
 @app.route("/")
 def landing():
+    # Get and format today's date
+    date = datetime.today().strftime('%B %d, %Y')
     return render_template("landing.html", date=date)
 
 @app.route("/get_game_state")
@@ -144,7 +143,9 @@ def get_game_data():
                     })
         
 @app.route("/gameplay")
-def index():   
+def index():
+    # Get and format today's date
+    date = datetime.today().strftime('%B %d, %Y')   
     return render_template("index.html", words=word_list, date=date)
 
 @app.route('/get_attempts_left')
